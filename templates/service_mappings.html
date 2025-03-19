@@ -1,0 +1,720 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>AWS to OCI Service Mappings</h2>
+    <p>This page provides a comprehensive mapping between AWS services and their Oracle Cloud Infrastructure (OCI) equivalents, based on the <a href="https://docs.oracle.com/en/solutions/oci-for-aws-professionals/index.html" target="_blank">official Oracle documentation</a>.</p>
+    
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Service Mapping Reference</h5>
+        </div>
+        <div class="card-body">
+            <p>When migrating from AWS to OCI, it's important to understand the equivalent services available in OCI. The translator will automatically map AWS service names to their OCI counterparts using these mappings.</p>
+        </div>
+    </div>
+
+    <!-- Navigation tabs for service categories -->
+    <ul class="nav nav-tabs" id="serviceCategories" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="compute-tab" data-bs-toggle="tab" data-bs-target="#compute" type="button" role="tab" aria-controls="compute" aria-selected="true">Compute</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="storage-tab" data-bs-toggle="tab" data-bs-target="#storage" type="button" role="tab" aria-controls="storage" aria-selected="false">Storage</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="database-tab" data-bs-toggle="tab" data-bs-target="#database" type="button" role="tab" aria-controls="database" aria-selected="false">Database</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="networking-tab" data-bs-toggle="tab" data-bs-target="#networking" type="button" role="tab" aria-controls="networking" aria-selected="false">Networking</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab" aria-controls="security" aria-selected="false">Security</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="management-tab" data-bs-toggle="tab" data-bs-target="#management" type="button" role="tab" aria-controls="management" aria-selected="false">Management</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="analytics-tab" data-bs-toggle="tab" data-bs-target="#analytics" type="button" role="tab" aria-controls="analytics" aria-selected="false">Analytics</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="integration-tab" data-bs-toggle="tab" data-bs-target="#integration" type="button" role="tab" aria-controls="integration" aria-selected="false">Integration</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="developer-tab" data-bs-toggle="tab" data-bs-target="#developer" type="button" role="tab" aria-controls="developer" aria-selected="false">Developer</button>
+        </li>
+    </ul>
+    
+    <!-- Tab content -->
+    <div class="tab-content mt-3" id="serviceCategoriesContent">
+        <!-- Compute Services -->
+        <div class="tab-pane fade show active" id="compute" role="tabpanel" aria-labelledby="compute-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Service</th>
+                            <th>OCI Service</th>
+                            <th>Description</th>
+                            <th>Policy Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Amazon EC2</td>
+                            <td>OCI Compute</td>
+                            <td>Virtual machines, bare metal servers, and dedicated host services</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/corepolicyreference.htm" target="_blank">compute</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Auto Scaling</td>
+                            <td>OCI Instance Pools</td>
+                            <td>Automatically adjusts compute capacity based on demand</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/corepolicyreference.htm" target="_blank">instance-pools</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Elastic Beanstalk</td>
+                            <td>OCI Resource Manager</td>
+                            <td>Platform as a service (PaaS) for deploying applications</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/resourcemanagerpolicyreference.htm" target="_blank">resource-manager</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Batch</td>
+                            <td>OCI Batch Service</td>
+                            <td>Managed batch processing at scale</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/datascipolicyreference.htm" target="_blank">batch</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon ECS</td>
+                            <td>OCI Container Engine</td>
+                            <td>Fully managed container orchestration service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/contengpolicyreference.htm" target="_blank">container-engine</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon EKS</td>
+                            <td>OCI Container Engine for Kubernetes</td>
+                            <td>Managed Kubernetes service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/contengpolicyreference.htm" target="_blank">container-engine-kubernetes</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon Lightsail</td>
+                            <td>OCI Compute</td>
+                            <td>Simplified virtual private servers</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/corepolicyreference.htm" target="_blank">compute</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Lambda</td>
+                            <td>OCI Functions</td>
+                            <td>Serverless compute service for running code without managing infrastructure</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/functionspolicyreference.htm" target="_blank">functions</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Outposts</td>
+                            <td>OCI Dedicated Region</td>
+                            <td>Cloud services delivered on-premises</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/dedicatedregionpolicyreference.htm" target="_blank">dedicated-region</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Fargate</td>
+                            <td>OCI Container Instances</td>
+                            <td>Serverless compute engine for containers</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/contengpolicyreference.htm" target="_blank">container-instances</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Storage Services -->
+        <div class="tab-pane fade" id="storage" role="tabpanel" aria-labelledby="storage-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Service</th>
+                            <th>OCI Service</th>
+                            <th>Description</th>
+                            <th>Policy Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Amazon S3</td>
+                            <td>OCI Object Storage</td>
+                            <td>Scalable storage for objects and files with high durability</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/objectstoragepolicyreference.htm" target="_blank">object-storage</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon S3 Glacier</td>
+                            <td>OCI Archive Storage</td>
+                            <td>Low-cost, long-term storage for data archiving</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/archivestoragepolicyreference.htm" target="_blank">archive-storage</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon EBS</td>
+                            <td>OCI Block Volume</td>
+                            <td>Block storage volumes for compute instances</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/corepolicyreference.htm" target="_blank">block-volume</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon EFS</td>
+                            <td>OCI File Storage</td>
+                            <td>Fully managed file storage service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/filestoragepolicyreference.htm" target="_blank">file-storage</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Storage Gateway</td>
+                            <td>OCI Storage Gateway</td>
+                            <td>Hybrid cloud storage integration</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/storagegatewaypolicyreference.htm" target="_blank">storage-gateway</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Backup</td>
+                            <td>OCI Backup Service</td>
+                            <td>Centralized backup management service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/backuppolicyreference.htm" target="_blank">backup</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Database Services -->
+        <div class="tab-pane fade" id="database" role="tabpanel" aria-labelledby="database-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Service</th>
+                            <th>OCI Service</th>
+                            <th>Description</th>
+                            <th>Policy Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Amazon RDS</td>
+                            <td>OCI Database</td>
+                            <td>Managed relational database service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/databasepolicyreference.htm" target="_blank">database</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon DynamoDB</td>
+                            <td>OCI NoSQL Database</td>
+                            <td>Fully managed NoSQL database service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/nosqldatabasepolicyreference.htm" target="_blank">nosql-database</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon ElastiCache</td>
+                            <td>OCI Cache</td>
+                            <td>In-memory caching service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/cachepolicyreference.htm" target="_blank">cache</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon Redshift</td>
+                            <td>OCI Autonomous Data Warehouse</td>
+                            <td>Cloud data warehouse service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/databasepolicyreference.htm#Details_for_Autonomous_Database" target="_blank">autonomous-data-warehouse</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon Neptune</td>
+                            <td>OCI Graph Studio</td>
+                            <td>Graph database service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/datascipolicyreference.htm" target="_blank">graph-studio</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon Timestream</td>
+                            <td>OCI MySQL HeatWave</td>
+                            <td>Time series database service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/mysqldatabasepolicyreference.htm" target="_blank">mysql-heatwave</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon DocumentDB</td>
+                            <td>OCI MySQL HeatWave</td>
+                            <td>Document database service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/mysqldatabasepolicyreference.htm" target="_blank">mysql-heatwave</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon Keyspaces</td>
+                            <td>OCI NoSQL Database</td>
+                            <td>Managed Cassandra-compatible database</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/nosqldatabasepolicyreference.htm" target="_blank">nosql-database</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Networking Services -->
+        <div class="tab-pane fade" id="networking" role="tabpanel" aria-labelledby="networking-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Service</th>
+                            <th>OCI Service</th>
+                            <th>Description</th>
+                            <th>Policy Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Amazon VPC</td>
+                            <td>OCI Virtual Cloud Network</td>
+                            <td>Isolated virtual network infrastructure</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/corepolicyreference.htm" target="_blank">vcn</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon CloudFront</td>
+                            <td>OCI Content Delivery Network</td>
+                            <td>Content delivery network for global distribution</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/cdnpolicyreference.htm" target="_blank">cdn</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon Route 53</td>
+                            <td>OCI DNS</td>
+                            <td>Domain name system web service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/dnspolicyreference.htm" target="_blank">dns</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Direct Connect</td>
+                            <td>OCI FastConnect</td>
+                            <td>Dedicated network connection to cloud</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/fastconnectpolicyreference.htm" target="_blank">fastconnect</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon API Gateway</td>
+                            <td>OCI API Gateway</td>
+                            <td>Create, publish, and manage APIs</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/apigatewaypolyreference.htm" target="_blank">api-gateway</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Global Accelerator</td>
+                            <td>OCI Web Application Firewall</td>
+                            <td>Improve application availability and performance</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/wafpolicyreference.htm" target="_blank">waf</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Transit Gateway</td>
+                            <td>OCI Dynamic Routing Gateway</td>
+                            <td>Connect VPCs and on-premises networks</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/drgreference.htm" target="_blank">drg</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS App Mesh</td>
+                            <td>OCI Service Mesh</td>
+                            <td>Service mesh for microservices applications</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/servicemeshreference.htm" target="_blank">service-mesh</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Cloud Map</td>
+                            <td>OCI Service Mesh</td>
+                            <td>Service discovery for cloud resources</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/servicemeshreference.htm" target="_blank">service-mesh</a></td>
+                        </tr>
+                        <tr>
+                            <td>Elastic Load Balancing</td>
+                            <td>OCI Load Balancer</td>
+                            <td>Distribute incoming traffic across multiple targets</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/loadbalancerpolicyreference.htm" target="_blank">load-balancer</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Security Services -->
+        <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Service</th>
+                            <th>OCI Service</th>
+                            <th>Description</th>
+                            <th>Policy Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>AWS IAM</td>
+                            <td>OCI Identity and Access Management</td>
+                            <td>Secure control of access to resources</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/identitypolicyreference.htm" target="_blank">identity</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Organizations</td>
+                            <td>OCI Compartments</td>
+                            <td>Centralized management of multiple accounts</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/compartmentpolicyreference.htm" target="_blank">compartment</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon Cognito</td>
+                            <td>OCI Identity Cloud Service</td>
+                            <td>Customer identity and access management</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/identitycloudpolicyreference.htm" target="_blank">identity-cloud-service</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Directory Service</td>
+                            <td>OCI Identity Domains</td>
+                            <td>Managed directory service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/identitydomainspolicyreference.htm" target="_blank">identity-domains</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Certificate Manager</td>
+                            <td>OCI Certificates</td>
+                            <td>Provision and manage SSL/TLS certificates</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/certificatespolicyreference.htm" target="_blank">certificates</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS KMS</td>
+                            <td>OCI Vault</td>
+                            <td>Create and control encryption keys</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/vaultpolicyreference.htm" target="_blank">vault</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Secrets Manager</td>
+                            <td>OCI Vault</td>
+                            <td>Rotate, manage, and retrieve secrets</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/vaultpolicyreference.htm" target="_blank">vault</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS CloudHSM</td>
+                            <td>OCI Dedicated Vault</td>
+                            <td>Hardware security module-based key storage</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/vaultpolicyreference.htm" target="_blank">dedicated-vault</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon GuardDuty</td>
+                            <td>OCI Cloud Guard</td>
+                            <td>Intelligent threat detection service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/cloudguardpolicyreference.htm" target="_blank">cloud-guard</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon Inspector</td>
+                            <td>OCI Vulnerability Scanning</td>
+                            <td>Automated security assessment service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/vulnerabilityscanningpolicyreference.htm" target="_blank">vulnerability-scanning</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Artifact</td>
+                            <td>OCI Compliance</td>
+                            <td>On-demand access to compliance reports</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/compliancepolicyreference.htm" target="_blank">compliance</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Security Hub</td>
+                            <td>OCI Security Advisor</td>
+                            <td>Comprehensive view of security state</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/securityadvisorpolicyreference.htm" target="_blank">security-advisor</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Shield</td>
+                            <td>OCI Web Application Firewall</td>
+                            <td>DDoS protection service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/wafpolicyreference.htm" target="_blank">waf</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS WAF</td>
+                            <td>OCI Web Application Firewall</td>
+                            <td>Web application firewall service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/wafpolicyreference.htm" target="_blank">waf</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Management Services -->
+        <div class="tab-pane fade" id="management" role="tabpanel" aria-labelledby="management-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Service</th>
+                            <th>OCI Service</th>
+                            <th>Description</th>
+                            <th>Policy Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Amazon CloudWatch</td>
+                            <td>OCI Monitoring</td>
+                            <td>Observability of resources and applications</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/monitoringpolicyreference.htm" target="_blank">monitoring</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS CloudTrail</td>
+                            <td>OCI Audit</td>
+                            <td>Governance, compliance, and audit logging</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/auditpolicyreference.htm" target="_blank">audit</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Config</td>
+                            <td>OCI Resource Manager</td>
+                            <td>Resource inventory, configuration history, and change notifications</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/resourcemanagerpolicyreference.htm" target="_blank">resource-manager</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS CloudFormation</td>
+                            <td>OCI Resource Manager</td>
+                            <td>Infrastructure as code service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/resourcemanagerpolicyreference.htm" target="_blank">resource-manager</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Systems Manager</td>
+                            <td>OCI Operations Insights</td>
+                            <td>Operations and management service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/operationsinsightspolicyreference.htm" target="_blank">operations-insights</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS License Manager</td>
+                            <td>OCI License Manager</td>
+                            <td>Manage software licenses</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/licensemanagerpolicyreference.htm" target="_blank">license-manager</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Control Tower</td>
+                            <td>OCI Security Zones</td>
+                            <td>Set up and govern secure, multi-account environment</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/securityzonespolicyreference.htm" target="_blank">security-zones</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Service Catalog</td>
+                            <td>OCI Marketplace</td>
+                            <td>Create and manage catalogs of approved IT services</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/marketplacepolicyreference.htm" target="_blank">marketplace</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Cost Explorer</td>
+                            <td>OCI Cost Analysis</td>
+                            <td>Visualize and manage cloud costs</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/costanalysispolicyreference.htm" target="_blank">cost-analysis</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Trusted Advisor</td>
+                            <td>OCI Optimizer</td>
+                            <td>Recommendations for optimizing resources</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/optimizerpolicyreference.htm" target="_blank">optimizer</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Analytics Services -->
+        <div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Service</th>
+                            <th>OCI Service</th>
+                            <th>Description</th>
+                            <th>Policy Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Amazon Athena</td>
+                            <td>OCI Data Science</td>
+                            <td>Interactive query service for data in S3</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/datascipolicyreference.htm" target="_blank">data-science</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon EMR</td>
+                            <td>OCI Data Flow</td>
+                            <td>Big data platform for processing vast amounts of data</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/dataflowpolicyreference.htm" target="_blank">data-flow</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon CloudSearch</td>
+                            <td>OCI Search Service</td>
+                            <td>Managed search service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/searchpolicyreference.htm" target="_blank">search-service</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon Elasticsearch</td>
+                            <td>OCI Search Service</td>
+                            <td>Search and analytics engine</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/searchpolicyreference.htm" target="_blank">search-service</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon Kinesis</td>
+                            <td>OCI Streaming</td>
+                            <td>Process and analyze streaming data</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/streampolicyreference.htm" target="_blank">streaming</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Data Pipeline</td>
+                            <td>OCI Data Integration</td>
+                            <td>Orchestration service for data-driven workflows</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/dataintegrationpolicyreference.htm" target="_blank">data-integration</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon QuickSight</td>
+                            <td>OCI Analytics Cloud</td>
+                            <td>Business intelligence service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/analyticscloudpolicyreference.htm" target="_blank">analytics-cloud</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Data Exchange</td>
+                            <td>OCI Data Catalog</td>
+                            <td>Find, subscribe to, and use third-party data</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/datacatalogpolicyreference.htm" target="_blank">data-catalog</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Glue</td>
+                            <td>OCI Data Integration</td>
+                            <td>Extract, transform, and load (ETL) service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/dataintegrationpolicyreference.htm" target="_blank">data-integration</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Lake Formation</td>
+                            <td>OCI Data Catalog</td>
+                            <td>Build, secure, and manage data lakes</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/datacatalogpolicyreference.htm" target="_blank">data-catalog</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon MSK</td>
+                            <td>OCI Streaming</td>
+                            <td>Fully managed Apache Kafka service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/streampolicyreference.htm" target="_blank">streaming</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Integration Services -->
+        <div class="tab-pane fade" id="integration" role="tabpanel" aria-labelledby="integration-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Service</th>
+                            <th>OCI Service</th>
+                            <th>Description</th>
+                            <th>Policy Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Amazon SNS</td>
+                            <td>OCI Notifications</td>
+                            <td>Messaging service for pub/sub patterns</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/notificationspolicyreference.htm" target="_blank">notifications</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon SQS</td>
+                            <td>OCI Queue</td>
+                            <td>Fully managed message queuing service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/queuepolicyreference.htm" target="_blank">queue</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon EventBridge</td>
+                            <td>OCI Events Service</td>
+                            <td>Serverless event bus for application integration</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/eventspolicyreference.htm" target="_blank">events</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Step Functions</td>
+                            <td>OCI Workflow</td>
+                            <td>Coordinate components of distributed applications</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/workflowpolicyreference.htm" target="_blank">workflow</a></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon MQ</td>
+                            <td>OCI Queue</td>
+                            <td>Managed message broker service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/queuepolicyreference.htm" target="_blank">queue</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS AppSync</td>
+                            <td>OCI API Gateway</td>
+                            <td>GraphQL interface to create and run APIs</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/apigatewaypolyreference.htm" target="_blank">api-gateway</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Developer Tools -->
+        <div class="tab-pane fade" id="developer" role="tabpanel" aria-labelledby="developer-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Service</th>
+                            <th>OCI Service</th>
+                            <th>Description</th>
+                            <th>Policy Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>AWS CodeStar</td>
+                            <td>OCI DevOps</td>
+                            <td>Develop, build, and deploy applications</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/devopspolicyreference.htm" target="_blank">devops</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS CodeCommit</td>
+                            <td>OCI DevOps</td>
+                            <td>Managed source control service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/devopspolicyreference.htm" target="_blank">devops</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS CodePipeline</td>
+                            <td>OCI DevOps</td>
+                            <td>Continuous integration and delivery service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/devopspolicyreference.htm" target="_blank">devops</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS CodeBuild</td>
+                            <td>OCI DevOps</td>
+                            <td>Fully managed build service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/devopspolicyreference.htm" target="_blank">devops</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS CodeDeploy</td>
+                            <td>OCI DevOps</td>
+                            <td>Automated deployment service</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/devopspolicyreference.htm" target="_blank">devops</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS Cloud9</td>
+                            <td>OCI Cloud Shell</td>
+                            <td>Cloud-based integrated development environment</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/cloudshellpolicyreference.htm" target="_blank">cloud-shell</a></td>
+                        </tr>
+                        <tr>
+                            <td>AWS X-Ray</td>
+                            <td>OCI Application Performance Monitoring</td>
+                            <td>Analyze and debug distributed applications</td>
+                            <td><a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/apmpolicyreference.htm" target="_blank">apm</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Policy Translation Impact</h5>
+        </div>
+        <div class="card-body">
+            <p>When translating AWS IAM policies to OCI policies:</p>
+            <ul>
+                <li>AWS service names are automatically mapped to their OCI equivalents</li>
+                <li>AWS actions are mapped to OCI verbs and resources</li>
+                <li>AWS condition keys are translated to OCI policy conditions where applicable</li>
+            </ul>
+            <p>For example, <code>s3:GetObject</code> becomes <code>Allow group [group] to read objects in tenancy</code></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

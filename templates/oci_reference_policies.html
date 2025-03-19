@@ -1,0 +1,520 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>OCI Reference Policies</h2>
+    <p>This page provides a comprehensive reference of OCI policy details including resource types, permitted verbs, and API operations for each service.</p>
+    
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>OCI Policy Reference</h5>
+        </div>
+        <div class="card-body">
+            <p>OCI policies are structured statements that define what actions principals (users, groups) can perform on resources. Understanding the available resource types, verbs, and API operations is essential for translating AWS IAM policies to OCI policies.</p>
+        </div>
+    </div>
+
+    <!-- Navigation tabs for service categories -->
+    <ul class="nav nav-tabs" id="serviceCategories" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="core-tab" data-bs-toggle="tab" data-bs-target="#core" type="button" role="tab" aria-controls="core" aria-selected="true">Core Services</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="storage-tab" data-bs-toggle="tab" data-bs-target="#storage" type="button" role="tab" aria-controls="storage" aria-selected="false">Storage</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="database-tab" data-bs-toggle="tab" data-bs-target="#database" type="button" role="tab" aria-controls="database" aria-selected="false">Database</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="networking-tab" data-bs-toggle="tab" data-bs-target="#networking" type="button" role="tab" aria-controls="networking" aria-selected="false">Networking</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab" aria-controls="security" aria-selected="false">Security</button>
+        </li>
+    </ul>
+    
+    <!-- Tab content -->
+    <div class="tab-content mt-3" id="serviceCategoriesContent">
+        <!-- Core Services -->
+        <div class="tab-pane fade show active" id="core" role="tabpanel" aria-labelledby="core-tab">
+            <div class="service-section" id="compute-service">
+                <h3>Compute</h3>
+                
+                <div class="accordion" id="computeAccordion">
+                    <!-- Resource Types -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#computeResourceTypes" aria-expanded="true" aria-controls="computeResourceTypes">
+                                Resource Types
+                            </button>
+                        </h2>
+                        <div id="computeResourceTypes" class="accordion-collapse collapse show" data-bs-parent="#computeAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Resource Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>compute-management-family</td>
+                                            <td>A collection of compute management resources, including instance configurations, instance pools, and cluster networks</td>
+                                        </tr>
+                                        <tr>
+                                            <td>instance</td>
+                                            <td>Compute instance (virtual machine or bare metal)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>instance-family</td>
+                                            <td>A collection of compute resources that includes instances, dedicated virtual machine hosts, dedicated bare metal hosts, console histories, and instance console connections</td>
+                                        </tr>
+                                        <tr>
+                                            <td>volume-attachment</td>
+                                            <td>Volume attachment, which is created when a block volume is attached to a compute instance</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Aggregate Resource Types -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#computeAggregateTypes" aria-expanded="false" aria-controls="computeAggregateTypes">
+                                Aggregate Resource Types
+                            </button>
+                        </h2>
+                        <div id="computeAggregateTypes" class="accordion-collapse collapse" data-bs-parent="#computeAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Aggregate Resource Type</th>
+                                            <th>Included Resource Types</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>compute-management-family</td>
+                                            <td>
+                                                <ul>
+                                                    <li>cluster-network</li>
+                                                    <li>instance-configuration</li>
+                                                    <li>instance-pool</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>instance-family</td>
+                                            <td>
+                                                <ul>
+                                                    <li>console-history</li>
+                                                    <li>dedicated-vm-host</li>
+                                                    <li>instance</li>
+                                                    <li>instance-console-connection</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Supported Variables -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#computeVariables" aria-expanded="false" aria-controls="computeVariables">
+                                Supported Variables
+                            </button>
+                        </h2>
+                        <div id="computeVariables" class="accordion-collapse collapse" data-bs-parent="#computeAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Variable</th>
+                                            <th>Applies To</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>${instance.compartment.id}</td>
+                                            <td>instance</td>
+                                            <td>The OCID of the compartment that contains the instance</td>
+                                        </tr>
+                                        <tr>
+                                            <td>${instance.availabilityDomain}</td>
+                                            <td>instance</td>
+                                            <td>The availability domain the instance is running in</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Verb + Resource Type Combinations -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#computeVerbCombinations" aria-expanded="false" aria-controls="computeVerbCombinations">
+                                Verb + Resource Type Combinations
+                            </button>
+                        </h2>
+                        <div id="computeVerbCombinations" class="accordion-collapse collapse" data-bs-parent="#computeAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Verb</th>
+                                            <th>Resource Type</th>
+                                            <th>API Operations</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>manage</td>
+                                            <td>instance-family</td>
+                                            <td>
+                                                <ul>
+                                                    <li>CreateConsoleHistory</li>
+                                                    <li>LaunchInstance</li>
+                                                    <li>TerminateInstance</li>
+                                                    <li>CreateInstanceConsoleConnection</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>read</td>
+                                            <td>instance-family</td>
+                                            <td>
+                                                <ul>
+                                                    <li>GetConsoleHistory</li>
+                                                    <li>GetConsoleHistoryContent</li>
+                                                    <li>GetInstance</li>
+                                                    <li>GetInstanceConsoleConnection</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>use</td>
+                                            <td>instance-family</td>
+                                            <td>
+                                                <ul>
+                                                    <li>InstanceAction</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="service-section mt-4" id="block-volume-service">
+                <h3>Block Volume</h3>
+                
+                <div class="accordion" id="blockVolumeAccordion">
+                    <!-- Resource Types -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#blockVolumeResourceTypes" aria-expanded="true" aria-controls="blockVolumeResourceTypes">
+                                Resource Types
+                            </button>
+                        </h2>
+                        <div id="blockVolumeResourceTypes" class="accordion-collapse collapse show" data-bs-parent="#blockVolumeAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Resource Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>volume</td>
+                                            <td>Block storage volume</td>
+                                        </tr>
+                                        <tr>
+                                            <td>volume-backup</td>
+                                            <td>Block volume backup</td>
+                                        </tr>
+                                        <tr>
+                                            <td>volume-family</td>
+                                            <td>A collection of block storage resources that includes volumes, volume backups, and volume groups</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Verb + Resource Type Combinations -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#blockVolumeVerbCombinations" aria-expanded="false" aria-controls="blockVolumeVerbCombinations">
+                                Verb + Resource Type Combinations
+                            </button>
+                        </h2>
+                        <div id="blockVolumeVerbCombinations" class="accordion-collapse collapse" data-bs-parent="#blockVolumeAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Verb</th>
+                                            <th>Resource Type</th>
+                                            <th>API Operations</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>manage</td>
+                                            <td>volume-family</td>
+                                            <td>
+                                                <ul>
+                                                    <li>CreateVolume</li>
+                                                    <li>DeleteVolume</li>
+                                                    <li>CreateVolumeBackup</li>
+                                                    <li>DeleteVolumeBackup</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>read</td>
+                                            <td>volume-family</td>
+                                            <td>
+                                                <ul>
+                                                    <li>GetVolume</li>
+                                                    <li>ListVolumes</li>
+                                                    <li>GetVolumeBackup</li>
+                                                    <li>ListVolumeBackups</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Storage Services -->
+        <div class="tab-pane fade" id="storage" role="tabpanel" aria-labelledby="storage-tab">
+            <div class="service-section" id="object-storage-service">
+                <h3>Object Storage</h3>
+                
+                <div class="accordion" id="objectStorageAccordion">
+                    <!-- Resource Types -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#objectStorageResourceTypes" aria-expanded="true" aria-controls="objectStorageResourceTypes">
+                                Resource Types
+                            </button>
+                        </h2>
+                        <div id="objectStorageResourceTypes" class="accordion-collapse collapse show" data-bs-parent="#objectStorageAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Resource Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>bucket</td>
+                                            <td>Object storage bucket, a logical container for storing objects</td>
+                                        </tr>
+                                        <tr>
+                                            <td>object</td>
+                                            <td>Object in Object Storage</td>
+                                        </tr>
+                                        <tr>
+                                            <td>objectstorage-namespace</td>
+                                            <td>Object Storage namespace, a logical entity for organizing buckets</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Supported Variables -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#objectStorageVariables" aria-expanded="false" aria-controls="objectStorageVariables">
+                                Supported Variables
+                            </button>
+                        </h2>
+                        <div id="objectStorageVariables" class="accordion-collapse collapse" data-bs-parent="#objectStorageAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Variable</th>
+                                            <th>Applies To</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>${bucket.name}</td>
+                                            <td>bucket, object</td>
+                                            <td>The name of the bucket</td>
+                                        </tr>
+                                        <tr>
+                                            <td>${object.name}</td>
+                                            <td>object</td>
+                                            <td>The name of the object</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Verb + Resource Type Combinations -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#objectStorageVerbCombinations" aria-expanded="false" aria-controls="objectStorageVerbCombinations">
+                                Verb + Resource Type Combinations
+                            </button>
+                        </h2>
+                        <div id="objectStorageVerbCombinations" class="accordion-collapse collapse" data-bs-parent="#objectStorageAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Verb</th>
+                                            <th>Resource Type</th>
+                                            <th>API Operations</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>manage</td>
+                                            <td>bucket</td>
+                                            <td>
+                                                <ul>
+                                                    <li>CreateBucket</li>
+                                                    <li>DeleteBucket</li>
+                                                    <li>UpdateBucket</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>read</td>
+                                            <td>bucket</td>
+                                            <td>
+                                                <ul>
+                                                    <li>GetBucket</li>
+                                                    <li>ListBuckets</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>manage</td>
+                                            <td>object</td>
+                                            <td>
+                                                <ul>
+                                                    <li>PutObject</li>
+                                                    <li>DeleteObject</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>read</td>
+                                            <td>object</td>
+                                            <td>
+                                                <ul>
+                                                    <li>GetObject</li>
+                                                    <li>HeadObject</li>
+                                                    <li>ListObjects</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- More service tabs would be added here -->
+    </div>
+    
+    <!-- Data Scraper Section -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Policy Reference Parser</h5>
+        </div>
+        <div class="card-body">
+            <p>The information on this page is gathered from the official OCI Policy Reference documentation. You can update this information by running the policy reference parser.</p>
+            <button id="runParser" class="btn btn-primary">Update Policy Reference Data</button>
+            <div id="parserOutput" class="mt-3" style="display: none;">
+                <div class="alert alert-info">
+                    Parsing in progress...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Setup parser button
+    const runParserBtn = document.getElementById('runParser');
+    const parserOutput = document.getElementById('parserOutput');
+    
+    runParserBtn.addEventListener('click', function() {
+        // Show the parsing message
+        parserOutput.style.display = 'block';
+        
+        // Call the API to run the parser
+        fetch('/api/run-policy-reference-parser', {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                parserOutput.innerHTML = `
+                    <div class="alert alert-success">
+                        <h5>Parser completed successfully!</h5>
+                        <p>${data.message}</p>
+                        <p>Refresh the page to see updated policy reference data.</p>
+                    </div>
+                `;
+            } else {
+                parserOutput.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h5>Parser encountered an error</h5>
+                        <p>${data.error}</p>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            parserOutput.innerHTML = `
+                <div class="alert alert-danger">
+                    <h5>Parser error</h5>
+                    <p>An error occurred: ${error.message}</p>
+                </div>
+            `;
+        });
+    });
+});
+</script>
+{% endblock %}

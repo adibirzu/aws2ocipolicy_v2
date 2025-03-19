@@ -1,0 +1,47 @@
+{
+  "services": [
+    {
+      "name": "Core Services",
+      "category": "Core Services",
+      "url": "https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/corepolicyreference.htm",
+      "resource_types": [],
+      "aggregate_resources": [],
+      "variables": [],
+      "verb_combinations": []
+    },
+    {
+      "name": "Object Storage",
+      "category": "Storage",
+      "url": "https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/objectstoragepolicyreference.htm",
+      "resource_types": [],
+      "aggregate_resources": [],
+      "variables": [
+        {
+          "name": "target.bucket.name",
+          "applies_to": "String and Patterns",
+          "description": "Use this variable to control access to a specific bucket. Important: Condition matching is case insensitive. If you have a bucket named \"BucketA\" and a bucket named \"bucketA\", the condition where target.bucket.name=\"BucketA\" applies to both. To avoid potential issues with resource names in policy, give your resources distinct names."
+        },
+        {
+          "name": "target.bucket.tag.<TagNamespace>.<TagKeyDefinition>",
+          "applies_to": "String",
+          "description": "Use this variable to control access to the buckets that have the specific tag. See Let users write objects to Object Storage buckets. Important: You cannot use this variable for CreateBucket operations and operations that involve multiple buckets such as ListBucket."
+        },
+        {
+          "name": "target.object.name",
+          "applies_to": "String and Patterns",
+          "description": "Use this variable to control access to a specific object or object patterns."
+        }
+      ],
+      "verb_combinations": []
+    },
+    {
+      "name": "Database",
+      "category": "Database",
+      "url": "https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/databasepolicyreference.htm",
+      "resource_types": [],
+      "aggregate_resources": [],
+      "variables": [],
+      "verb_combinations": []
+    }
+  ]
+}

@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Advanced Compute Policy Translator</h2>
+    <p>Convert AWS EC2 policies to OCI Compute policies with advanced conditions.</p>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="aws-policy" class="form-label">AWS EC2 Policy (JSON):</label>
+                <textarea id="aws-policy" class="form-control json-input" placeholder='{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeInstances",
+        "ec2:StartInstances",
+        "ec2:StopInstances"
+      ],
+      "Resource": "*"
+    }
+  ]
+}'></textarea>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="oci-group" class="form-label">OCI Group Name:</label>
+                <input type="text" id="oci-group" class="form-control" placeholder="ComputeAdmins">
+            </div>
+            
+            <div class="mb-3">
+                <label for="resource-type" class="form-label">Resource Type:</label>
+                <select id="resource-type" class="form-select">
+                    <option value="instance">instance</option>
+                    <option value="compute-management">compute-management</option>
+                    <option value="volume">volume</option>
+                    <option value="volume-attachment">volume-attachment</option>
+                    <option value="virtual-network-family">virtual-network-family</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="resource-ocid" class="form-label">Resource OCID (optional):</label>
+                <input type="text" id="resource-ocid" class="form-control" placeholder="ocid1.instance.oc1..example">
+                <small class="form-text text-muted">Leave empty to create policies that apply to all resources of the selected type.</small>
+            </div>
+        </div>
+    </div>
+    
+    <button id="translate-btn" class="btn btn-primary">Translate Policy</button>
+    
+    <div id="loading" class="loading">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p>Translating policy...</p>
+    </div>
+    
+    <div class="policy-container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>OCI Policy:</h3>
+            <button id="save-policy-btn" class="btn btn-success" disabled>Save Policy</button>
+        </div>
+        <div id="policy-output" class="policy-output">
+            <!-- Translated policy will appear here -->
+        </div>
+        <div id="error-container" class="error-message">
+            <!-- Error messages will appear here -->
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <h4>Common AWS to OCI Policy Translations for Compute</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>AWS EC2 Action</th>
+                    <th>OCI Compute Equivalent</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ec2:DescribeInstances</td>
+                    <td>Allow group [group] to inspect instances in tenancy</td>
+                </tr>
+                <tr>
+                    <td>ec2:RunInstances</td>
+                    <td>Allow group [group] to manage instances in tenancy</td>
+                </tr>
+                <tr>
+                    <td>ec2:StartInstances</td>
+                    <td>Allow group [group] to use instances in tenancy</td>
+                </tr>
+                <tr>
+                    <td>ec2:StopInstances</td>
+                    <td>Allow group [group] to use instances in tenancy</td>
+                </tr>
+                <tr>
+                    <td>ec2:TerminateInstances</td>
+                    <td>Allow group [group] to manage instances in tenancy</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const translateBtn = document.getElementById('translate-btn');
+    const savePolicyBtn = document.getElementById('save-policy-btn');
+    const awsPolicyInput = document.getElementById('aws-policy');
+    const ociGroupInput = document.getElementById('oci-group');
+    const resourceTypeInput = document.getElementById('resource-type');
+    const resourceOcidInput = document.getElementById('resource-ocid');
+    const policyOutput = document.getElementById('policy-output');
+    const errorContainer = document.getElementById('error-container');
+    const loadingIndicator = document.getElementById('loading');
+    
+    translateBtn.addEventListener('click', function() {
+        // Clear previous output and errors
+        policyOutput.innerHTML = '';
+        errorContainer.innerHTML = '';
+        
+        // Disable save button when starting a new translation
+        savePolicyBtn.disabled = true;
+        
+        // Get input values
+        const awsPolicy = awsPolicyInput.value.trim();
+        const ociGroup = ociGroupInput.value.trim();
+        const resourceType = resourceTypeInput.value;
+        const resourceOcid = resourceOcidInput.value.trim();
+        
+        // Validate inputs
+        if (!awsPolicy) {
+            errorContainer.innerHTML = 'Please enter an AWS policy.';
+            return;
+        }
+        
+        if (!ociGroup) {
+            errorContainer.innerHTML = 'Please enter an OCI group name.';
+            return;
+        }
+        
+        // Show loading indicator
+        loadingIndicator.style.display = 'block';
+        
+        // Prepare request data
+        const requestData = {
+            aws_policy: awsPolicy,
+            oci_group: ociGroup,
+            resource_type: resourceType,
+            resource_ocid: resourceOcid
+        };
+        
+        // Send API request
+        fetch('/api/generate-advanced-policy', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Hide loading indicator
+            loadingIndicator.style.display = 'none';
+            
+            if (data.error) {
+                // Display error
+                errorContainer.innerHTML = data.error;
+            } else {
+                // Display policy
+                policyOutput.innerText = data.policy;
+                
+                // Enable save button when we have a policy
+                savePolicyBtn.disabled = false;
+                
+                // Display validation errors if any
+                if (data.errors && data.errors.length > 0) {
+                    errorContainer.innerHTML = '<strong>Validation Errors:</strong><br>' + 
+                        data.errors.join('<br>');
+                }
+            }
+        })
+        .catch(error => {
+            // Hide loading indicator
+            loadingIndicator.style.display = 'none';
+            
+            // Display error
+            errorContainer.innerHTML = 'Error: ' + error.message;
+        });
+    });
+    
+    // Add event listener for the save policy button
+    savePolicyBtn.addEventListener('click', function() {
+        const policyText = policyOutput.innerText;
+        if (!policyText) {
+            return;
+        }
+        
+        // Create a new blob with the policy text
+        const blob = new Blob([policyText], { type: 'text/plain' });
+        
+        // Create a temporary anchor element
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        
+        // Get the OCI group name and resource type for the filename
+        const groupName = ociGroupInput.value.trim() || 'oci';
+        const resourceType = resourceTypeInput.value || 'compute';
+        a.download = `${groupName}-${resourceType}-policy.txt`;
+        
+        // Append to the document, click to trigger download, then remove
+        document.body.appendChild(a);
+        a.click();
+        
+        // Clean up
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+    });
+});
+</script>
+{% endblock %}

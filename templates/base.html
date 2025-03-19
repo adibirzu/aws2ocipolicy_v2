@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS to OCI Policy Translator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .policy-container {
+            margin-top: 30px;
+        }
+        .json-input {
+            font-family: monospace;
+            min-height: 200px;
+        }
+        .policy-output {
+            font-family: monospace;
+            min-height: 150px;
+            white-space: pre-wrap;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">AWS to OCI Policy Translator</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/simple-policy">Simple Policy</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Advanced Policy
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="/advanced-policy/object-storage">Object Storage</a></li>
+                                <li><a class="dropdown-item" href="/advanced-policy/compute">Compute</a></li>
+                                <li><a class="dropdown-item" href="/advanced-policy/iam">IAM</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/service-mappings">Service Mappings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/oci-reference-policies">OCI Reference Policies</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main>
+            {% block content %}
+            <div class="jumbotron">
+                <h1 class="display-4">Welcome to AWS to OCI Policy Translator</h1>
+                <p class="lead">This tool translates AWS IAM policies to Oracle Cloud Infrastructure (OCI) policies.</p>
+                <hr class="my-4">
+                <p>Choose an option from the navigation bar to get started:</p>
+                <div class="row mt-4">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Simple Policy</h5>
+                                <p class="card-text">Translate standard AWS policies to OCI without advanced conditions.</p>
+                                <a href="/simple-policy" class="btn btn-primary">Go to Simple Policy</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Object Storage Policy</h5>
+                                <p class="card-text">Translate S3 policies to OCI Object Storage with conditions.</p>
+                                <a href="/advanced-policy/object-storage" class="btn btn-primary">Go to Object Storage</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Compute Policy</h5>
+                                <p class="card-text">Translate EC2 policies to OCI Compute with conditions.</p>
+                                <a href="/advanced-policy/compute" class="btn btn-primary">Go to Compute</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Service Mappings</h5>
+                                <p class="card-text">View comprehensive mappings between AWS and OCI services.</p>
+                                <a href="/service-mappings" class="btn btn-primary">View Mappings</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </main>
+
+        <footer class="pt-4 my-md-5 pt-md-5 border-top">
+            <div class="row">
+                <div class="col-12 col-md text-center">
+                    <small class="d-block mb-3 text-muted">&copy; 2025 AWS to OCI Policy Translator</small>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
