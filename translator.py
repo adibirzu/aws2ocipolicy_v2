@@ -5,7 +5,10 @@ import re
 logger = logging.getLogger(__name__)
 
 # AWS to OCI service mappings based on Oracle documentation
-# Source: https://docs.oracle.com/en/solutions/oci-for-aws-professionals/
+# Sources:
+# - https://docs.oracle.com/en/solutions/oci-for-aws-professionals/
+# - https://docs.oracle.com/en-us/iaas/Content/services.htm
+# - https://aws.amazon.com/products/
 SERVICE_MAPPINGS = {
     # Compute
     "ec2": "compute",
@@ -13,22 +16,33 @@ SERVICE_MAPPINGS = {
     "elastic-beanstalk": "resource-manager",
     "batch": "batch",
     "ecs": "container-engine",
-    "ecr": "container-registry", # Added ECR mapping
+    "ecr": "container-registry",
     "eks": "container-engine-kubernetes",
     "lightsail": "compute",
     "lambda": "functions",
     "outposts": "dedicated-region",
     "fargate": "container-instances",
+    "server-less": "functions",
+    "app-runner": "container-instances",
+    "localzones": "compute",
+    "wavelength": "edge-services",
+    "ec2-auto-scaling": "instance-pools",
+    "thinclient": "compute",
+    "compute-optimizer": "compute-optimizer",
     
     # Storage
     "s3": "object-storage",
     "s3-glacier": "archive-storage",
-    "s3express": "object-storage", # Added S3 Express mapping
+    "s3express": "object-storage",
     "ebs": "block-volume",
     "efs": "file-storage",
-    "elasticfilesystem": "file-storage", # Added explicit EFS mapping
+    "elasticfilesystem": "file-storage",
     "storage-gateway": "storage-gateway",
     "backup": "backup-service",
+    "fsx": "file-storage",
+    "snow-family": "data-transfer",
+    "aws-backup": "backup-service",
+    "cloudendure-disaster-recovery": "disaster-recovery",
     
     # Database
     "rds": "database",
@@ -39,6 +53,31 @@ SERVICE_MAPPINGS = {
     "timestream": "mysql-heatwave",
     "documentdb": "mysql-heatwave",
     "keyspaces": "nosql-database",
+    "memorydb": "cache",
+    "database-migration-service": "database-migration",
+    "quantum-ledger-database": "blockchain",
+    "aurora": "mysql-heatwave",
+    "qldb": "blockchain",
+    "opensearch-service": "search-service",
+    
+    # AI/ML Services
+    "sagemaker": "data-science",
+    "comprehend": "ai-language",
+    "forecast": "ai-forecasting",
+    "personalize": "ai-services",
+    "rekognition": "vision",
+    "polly": "ai-speech",
+    "lex": "digital-assistant",
+    "textract": "document-understanding",
+    "translate": "ai-language",
+    "transcribe": "ai-speech",
+    "kendra": "search-service",
+    "codeguru": "application-performance-monitoring",
+    "lookout-for-vision": "vision",
+    "deepracer": "ai-services",
+    "deeplens": "vision",
+    "deepcomposer": "ai-services",
+    "fraud-detector": "security-advisor",
     
     # Networking & Content Delivery
     "vpc": "vcn",
@@ -52,16 +91,25 @@ SERVICE_MAPPINGS = {
     "cloud-map": "service-mesh",
     "elb": "load-balancer",
     "cloudmap": "dns",
+    "privatelink": "service-connector-hub",
+    "vpc-lattice": "service-mesh",
+    "vpc-ipam": "ipam",
+    "network-firewall": "network-firewall",
+    "cloudwan": "virtual-network",
+    "elastic-load-balancing": "load-balancer",
+    "application-load-balancer": "load-balancer",
+    "gateway-load-balancer": "load-balancer",
+    "network-load-balancer": "load-balancer",
     
     # Security, Identity & Compliance
     "iam": "identity",
-    "organizations": "identity", # Changed from compartments to identity
+    "organizations": "identity",
     "cognito": "identity-cloud-service",
     "directory-service": "identity-domains",
     "acm": "certificates",
     "kms": "vault",
     "secrets-manager": "vault",
-    "secretsmanager": "vault", # Added explicit SecretManager mapping
+    "secretsmanager": "vault",
     "cloudhsm": "dedicated-vault",
     "guardduty": "cloud-guard",
     "inspector": "vulnerability-scanning",
@@ -69,6 +117,16 @@ SERVICE_MAPPINGS = {
     "security-hub": "security-advisor",
     "shield": "waf-protection",
     "waf": "web-application-firewall",
+    "firewall-manager": "network-firewall",
+    "detective": "cloud-guard",
+    "audit-manager": "compliance",
+    "sso": "identity-domains",
+    "verified-permissions": "identity-domains",
+    "aws-account-management": "identity",
+    "certificate-manager": "certificates",
+    "private-certificate-authority": "certificates",
+    "aws-privateca": "certificates",
+    "macie": "data-safe",
     
     # Management & Governance
     "cloudwatch": "monitoring",
@@ -83,6 +141,22 @@ SERVICE_MAPPINGS = {
     "app-config": "resource-manager",
     "cost-explorer": "cost-analysis",
     "trusted-advisor": "optimizer",
+    "opsworks": "resource-manager",
+    "organizations": "tenancy-manager",
+    "systems-manager-parameter-store": "parameters",
+    "proton": "devops",
+    "launch-wizard": "resource-manager",
+    "resilience-hub": "disaster-recovery",
+    "fault-injection-service": "logging-analytics",
+    "health-dashboard": "health-checks",
+    "wellarchitected-tool": "cloud-advisor",
+    "aws-consoleforecs": "container-instance-console",
+    "chatbot": "digital-assistant",
+    "compute-optimizer": "compute-optimizer",
+    "health": "health-checks",
+    "managed-grafana": "monitoring",
+    "managed-service-prometheus": "monitoring",
+    "resilience-hub": "disaster-recovery",
     
     # Analytics
     "athena": "data-science",
@@ -96,16 +170,29 @@ SERVICE_MAPPINGS = {
     "glue": "data-integration",
     "lake-formation": "data-catalog",
     "msk": "streaming",
+    "opensearch": "search-service",
+    "redshift-serverless": "autonomous-data-warehouse",
+    "data-firehose": "streaming",
+    "data-brew": "data-integration",
+    "finspace": "financial-services",
+    "clean-rooms": "data-clean-rooms",
     
     # Integration
-    "sns": "notification-service", # Changed to notification-service
-    "notifications": "notification-service", # Added explicit notifications mapping
-    "sqs": "streaming", # Changed from queue to streaming
-    "queue": "streaming", # Added explicit queue mapping
+    "sns": "notification-service",
+    "notifications": "notification-service",
+    "sqs": "streaming",
+    "queue": "streaming",
     "eventbridge": "events-service",
     "step-functions": "workflow",
     "mq": "streaming",
     "appsync": "api-gateway",
+    "appflow": "data-integration",
+    "event-fork-pipelines": "events-service",
+    "express-workflows": "workflow",
+    "simple-workflow-service": "workflow",
+    "managed-workflows-apache-airflow": "workflow",
+    "app-integration": "integration-cloud",
+    "pipes": "events-service",
     
     # Developer Tools
     "codestar": "devops",
@@ -114,7 +201,79 @@ SERVICE_MAPPINGS = {
     "codebuild": "devops",
     "codedeploy": "devops",
     "cloud9": "cloud-shell",
-    "x-ray": "application-performance-monitoring"
+    "x-ray": "application-performance-monitoring",
+    "amplify": "amplify",
+    "app-test": "devops",
+    "cdk": "resource-manager",
+    "cloudcontrol-api": "cloud-control",
+    "cloudshell": "cloud-shell",
+    "corretto": "java",
+    "tools-sdks": "sdk",
+    "codecatalyst": "devops",
+    "codeartifact": "artifact-registry",
+    "codeguru": "code-analyzer",
+    
+    # Application Integration
+    "application-integration": "integration-cloud",
+    "console-mobile-application": "mobile-hub",
+    "mobile": "mobile-hub",
+    "pinpoint": "notifications",
+    "simple-email-service": "email-delivery",
+    "b2bi": "b2b-services",
+    
+    # Business Applications
+    "connect": "communications",
+    "honeycode": "apex",
+    "supply-chain": "fusion-cloud",
+    "workdocs": "content",
+    "workmail": "email-delivery",
+    "wickr": "communications",
+    "chime": "communications",
+    "chime-sdk": "communications",
+    
+    # End User Computing
+    "appstream": "virtual-desktop",
+    "workspaces": "virtual-desktop",
+    "workspaces-web": "virtual-desktop",
+    "worklink": "virtual-desktop",
+    
+    # Internet of Things
+    "iot-core": "iot",
+    "iot-device-defender": "iot",
+    "iot-device-management": "iot",
+    "iot-events": "iot",
+    "iot-analytics": "iot-analytics",
+    "iot-sitewise": "iot",
+    "iot-1-click": "iot",
+    "iot-button": "iot",
+    "iot-expresstcp": "iot",
+    "iot-fleetwise": "iot",
+    "iot-greengrass": "iot",
+    "iot-twinmaker": "digital-twin",
+    "freertos": "iot",
+    
+    # Quantum Technologies
+    "braket": "quantum",
+    
+    # Blockchain
+    "managed-blockchain": "blockchain",
+    
+    # Satellite
+    "ground-station": "ground-station",
+    
+    # Robotics
+    "robomaker": "robotics",
+    
+    # Customer Enablement
+    "managed-services": "managed-services",
+    "support": "support",
+    "support-app": "support",
+    "iq": "professional-services",
+    "activate": "startup-programs",
+    "marketplace": "marketplace",
+    
+    # Other
+    "all-services": "all-resources"
 }
 
 # OCI resource types based on official documentation
@@ -376,13 +535,17 @@ ACTION_MAPPINGS = {
     "*:*": ("manage", "all-resources", "")
 }
 
-def translate_simple_policy(aws_policy_json, oci_group_name):
+# Identity Domains policy format is the same as standard OCI policies
+# but with additional options for identity domain components
+
+def translate_simple_policy(aws_policy_json, oci_group_name, use_identity_domains=False, identity_domain_name=None):
     """
     Translates a simple AWS policy to an OCI policy.
     
     Args:
         aws_policy_json (str): AWS policy JSON as a string
         oci_group_name (str): OCI group name
+        use_identity_domains (bool): Whether to use Identity Domains policy format
         
     Returns:
         str: OCI policy statements as a string
@@ -430,8 +593,38 @@ def translate_simple_policy(aws_policy_json, oci_group_name):
         compartment_scope = "tenancy"
         
         for (verb, resource, condition_str), _ in policy_groups.items():
-            policy = f"Allow group {oci_group_name} to {verb} {resource} in {compartment_scope}"
+            # According to OCI documentation, Identity Domains policies use the same format
+            # as standard OCI policies, but can include identity domains as subjects or resources
+            # Reference: https://docs.oracle.com/en-us/iaas/Content/Identity/policyreference/iampolicyreference.htm
             
+            if use_identity_domains:
+                # For Identity Domains, we can use identity_domain_name as a resource component
+                # This allows policies to target specific identity domains
+                # Format the policy with identity domain components if needed
+                
+                # Extract service and resource_type if present
+                parts = resource.split(' ', 1)
+                service = parts[0]
+                resource_type = parts[1] if len(parts) > 1 else ""
+                
+                # For policies with identity domains, often you'll want to use 
+                # one of these formats depending on the action:
+                # 1. Allow group {group} to {verb} identity-domains in tenancy
+                # 2. Allow group {group} to {verb} identity-domain-administrators in tenancy
+                # 3. Allow group {group} to {verb} identity-domain.{identity_domain_name} in tenancy
+                # For simplicity, we'll use format #1 for identity resources, and standard format for others
+                
+                if service == "identity" or service == "identity-domains":
+                    # For identity resources, target the identity-domains service
+                    policy = f"Allow group {oci_group_name} to {verb} identity-domains in {compartment_scope}"
+                else:
+                    # For non-identity resources, use the standard format
+                    policy = f"Allow group {oci_group_name} to {verb} {resource} in {compartment_scope}"
+            else:
+                # Standard OCI IAM policy format
+                policy = f"Allow group {oci_group_name} to {verb} {resource} in {compartment_scope}"
+            
+            # Add condition if present (same format for both policy types)
             if condition_str:
                 policy += f" where {condition_str}"
                 
@@ -617,8 +810,21 @@ def build_conditions(conditions, resource_type, resource_ocid):
                 if key == "s3:prefix":
                     if isinstance(values, str):
                         values = [values]
-                    prefix_conds = " or ".join([f"request.object.name.startsWith('{v}')" for v in values])
-                    conds.append(f"({prefix_conds})")
+                    if resource_type and "object-storage" in resource_type:
+                        # Use the correct OCI Object Storage format for prefix conditions
+                        prefix_conds = []
+                        for v in values:
+                            # Handle trailing slash for directory-like prefixes
+                            if v.endswith('/'):
+                                prefix_conds.append(f"any {{{v}*}}")
+                            else:
+                                prefix_conds.append(f"'{v}'")
+                        prefix_str = ", ".join(prefix_conds)
+                        conds.append(f"target.object.name in [{prefix_str}]")
+                    else:
+                        # Fallback to general condition
+                        prefix_conds = " or ".join([f"request.object.name.startsWith('{v}')" for v in values])
+                        conds.append(f"({prefix_conds})")
                 elif key == "s3:max-keys":
                     if operator == "NumericLessThanEquals":
                         conds.append(f"request.object.fetch.max <= {values}")
@@ -730,12 +936,42 @@ def build_conditions(conditions, resource_type, resource_ocid):
                     
                     # Convert AWS ARNs to OCI resource references
                     resource_conds = []
+                    bucket_names = []
+                    bucket_prefixes = []
+                    object_paths = []
+                    
                     for arn in values:
                         # Parse ARN to identify resource type
                         if arn.startswith("arn:aws:s3:::"):
-                            # S3 bucket ARN
-                            bucket_name = arn.split(":")[-1]
-                            resource_conds.append(f"target.object-storage.bucket.name = '{bucket_name}'")
+                            # S3 ARN parsing
+                            parts = arn.split(":")
+                            if len(parts) >= 6:
+                                bucket_and_path = parts[5]
+                                
+                                # Check if ARN includes object path (contains '/')
+                                if '/' in bucket_and_path:
+                                    bucket, obj_path = bucket_and_path.split('/', 1)
+                                    # Handle object paths
+                                    if '*' in obj_path:
+                                        # Handle wildcards in path
+                                        if obj_path.endswith('*'):
+                                            # Prefix matching
+                                            prefix = obj_path.rstrip('*')
+                                            bucket_prefixes.append((bucket, prefix))
+                                        else:
+                                            # Pattern matching
+                                            object_paths.append((bucket, obj_path))
+                                    else:
+                                        # Exact object
+                                        resource_conds.append(f"target.object-storage.object.name = '{obj_path}'")
+                                        resource_conds.append(f"target.object-storage.bucket.name = '{bucket}'")
+                                else:
+                                    # Just a bucket ARN
+                                    bucket_names.append(bucket_and_path)
+                            else:
+                                # Generic S3 bucket reference
+                                bucket_name = arn.split(":")[-1]
+                                bucket_names.append(bucket_name)
                         elif arn.startswith("arn:aws:ec2:"):
                             # EC2 instance ARN
                             resource_conds.append(f"target.compute.instance.id = '{SAMPLE_OCIDS['instance']}'")
@@ -748,6 +984,30 @@ def build_conditions(conditions, resource_type, resource_ocid):
                         else:
                             # Generic resource reference
                             resource_conds.append(f"target.resource.id = 'ocid1.resource.oc1..example'")
+                    
+                    # Handle bucket names
+                    if bucket_names:
+                        bucket_list = ", ".join([f"'{name}'" for name in bucket_names])
+                        resource_conds.append(f"target.object-storage.bucket.name in [{bucket_list}]")
+                    
+                    # Handle object prefixes
+                    if bucket_prefixes:
+                        for bucket, prefix in bucket_prefixes:
+                            if prefix.endswith('/'):
+                                resource_conds.append(f"target.object-storage.bucket.name = '{bucket}'")
+                                resource_conds.append(f"target.object.name in [any {{{prefix}*}}]")
+                            else:
+                                resource_conds.append(f"target.object-storage.bucket.name = '{bucket}'")
+                                resource_conds.append(f"target.object.name in ['{prefix}*']")
+                    
+                    # Handle wildcard object paths
+                    if object_paths:
+                        for bucket, pattern in object_paths:
+                            # Convert AWS pattern to OCI pattern
+                            # Replace * with appropriate OCI wildcard
+                            oci_pattern = pattern.replace('*', '%')
+                            resource_conds.append(f"target.object-storage.bucket.name = '{bucket}'")
+                            resource_conds.append(f"target.object.name like '{oci_pattern}'")
                     
                     if resource_conds:
                         conds.append("(" + " or ".join(resource_conds) + ")")

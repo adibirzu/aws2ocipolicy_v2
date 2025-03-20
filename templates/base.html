@@ -66,6 +66,12 @@
                             <a class="nav-link" href="/service-mappings">Service Mappings</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="/action-mappings">Action Mappings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/policy-differences">Policy Differences</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="/oci-reference-policies">OCI Reference Policies</a>
                         </li>
                     </ul>
@@ -81,39 +87,49 @@
                 <hr class="my-4">
                 <p>Choose an option from the navigation bar to get started:</p>
                 <div class="row mt-4">
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Simple Policy</h5>
                                 <p class="card-text">Translate standard AWS policies to OCI without advanced conditions.</p>
-                                <a href="/simple-policy" class="btn btn-primary">Go to Simple Policy</a>
+                                <a href="/simple-policy" class="btn btn-primary mt-auto">Go to Simple Policy</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Object Storage Policy</h5>
-                                <p class="card-text">Translate S3 policies to OCI Object Storage with conditions.</p>
-                                <a href="/advanced-policy/object-storage" class="btn btn-primary">Go to Object Storage</a>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">Advanced Policies</h5>
+                                <p class="card-text">Translate AWS policies with service-specific conditions (S3, EC2, IAM).</p>
+                                <div class="dropdown mt-auto">
+                                    <button class="btn btn-primary dropdown-toggle w-100" type="button" id="advancedPoliciesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Select Service
+                                    </button>
+                                    <ul class="dropdown-menu w-100" aria-labelledby="advancedPoliciesDropdown">
+                                        <li><a class="dropdown-item" href="/advanced-policy/object-storage">Object Storage</a></li>
+                                        <li><a class="dropdown-item" href="/advanced-policy/compute">Compute</a></li>
+                                        <li><a class="dropdown-item" href="/advanced-policy/iam">IAM</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Compute Policy</h5>
-                                <p class="card-text">Translate EC2 policies to OCI Compute with conditions.</p>
-                                <a href="/advanced-policy/compute" class="btn btn-primary">Go to Compute</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Service Mappings</h5>
-                                <p class="card-text">View comprehensive mappings between AWS and OCI services.</p>
-                                <a href="/service-mappings" class="btn btn-primary">View Mappings</a>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">Reference Documentation</h5>
+                                <p class="card-text">View mappings and reference documentation for AWS to OCI translation.</p>
+                                <div class="dropdown mt-auto">
+                                    <button class="btn btn-primary dropdown-toggle w-100" type="button" id="referenceDrop" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Select Reference
+                                    </button>
+                                    <ul class="dropdown-menu w-100" aria-labelledby="referenceDrop">
+                                        <li><a class="dropdown-item" href="/service-mappings">Service Mappings</a></li>
+                                        <li><a class="dropdown-item" href="/action-mappings">Action Mappings</a></li>
+                                        <li><a class="dropdown-item" href="/policy-differences">Policy Differences</a></li>
+                                        <li><a class="dropdown-item" href="/oci-reference-policies">OCI Reference Policies</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>

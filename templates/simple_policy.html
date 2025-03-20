@@ -27,7 +27,13 @@
         <div class="col-md-6">
             <div class="mb-3">
                 <label for="oci-group" class="form-label">OCI Group Name:</label>
-                <input type="text" id="oci-group" class="form-control" placeholder="Administrators">
+                <input type="text" id="oci-group" class="form-control" placeholder="GroupName">
+            </div>
+            
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="use-identity-domains">
+                <label class="form-check-label" for="use-identity-domains">Use OCI IAM Identity Domains format</label>
+                <small class="form-text text-muted d-block">Use this for policies that will be applied in Identity Domains. <a href="https://blogs.oracle.com/cloudsecurity/post/creating-oci-access-policies-oci-iam-identity-domains" target="_blank">Learn more</a></small>
             </div>
         </div>
     </div>
@@ -93,10 +99,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show loading indicator
         loadingIndicator.style.display = 'block';
         
+        // Get checkbox value
+        const useIdentityDomains = document.getElementById('use-identity-domains').checked;
+        
         // Prepare request data
         const requestData = {
             aws_policy: awsPolicy,
-            oci_group: ociGroup
+            oci_group: ociGroup,
+            use_identity_domains: useIdentityDomains
         };
         
         // Send API request

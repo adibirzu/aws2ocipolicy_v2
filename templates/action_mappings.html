@@ -1,0 +1,854 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>AWS to OCI Action Mappings</h2>
+    <p>This page provides a comprehensive mapping between AWS actions and their Oracle Cloud Infrastructure (OCI) equivalents, based on the <a href="https://docs.oracle.com/en/solutions/oci-for-aws-professionals/index.html" target="_blank">official Oracle documentation</a>.</p>
+    
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Action Mapping Reference</h5>
+        </div>
+        <div class="card-body">
+            <p>When translating AWS IAM policies to OCI, specific AWS actions are mapped to OCI verbs and resource types. The translator will automatically convert AWS actions using these mappings.</p>
+        </div>
+    </div>
+
+    <!-- Navigation tabs for service categories -->
+    <ul class="nav nav-tabs" id="serviceCategories" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="s3-tab" data-bs-toggle="tab" data-bs-target="#s3" type="button" role="tab" aria-controls="s3" aria-selected="true">S3/Object Storage</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ec2-tab" data-bs-toggle="tab" data-bs-target="#ec2" type="button" role="tab" aria-controls="ec2" aria-selected="false">EC2/Compute</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="iam-tab" data-bs-toggle="tab" data-bs-target="#iam" type="button" role="tab" aria-controls="iam" aria-selected="false">IAM/Identity</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="vpc-tab" data-bs-toggle="tab" data-bs-target="#vpc" type="button" role="tab" aria-controls="vpc" aria-selected="false">VPC/Networking</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="db-tab" data-bs-toggle="tab" data-bs-target="#db" type="button" role="tab" aria-controls="db" aria-selected="false">RDS/Database</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="lambda-tab" data-bs-toggle="tab" data-bs-target="#lambda" type="button" role="tab" aria-controls="lambda" aria-selected="false">Lambda/Functions</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="kms-tab" data-bs-toggle="tab" data-bs-target="#kms" type="button" role="tab" aria-controls="kms" aria-selected="false">KMS/Vault</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="dynamodb-tab" data-bs-toggle="tab" data-bs-target="#dynamodb" type="button" role="tab" aria-controls="dynamodb" aria-selected="false">DynamoDB/NoSQL</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="patterns-tab" data-bs-toggle="tab" data-bs-target="#patterns" type="button" role="tab" aria-controls="patterns" aria-selected="false">Common Patterns</button>
+        </li>
+    </ul>
+    
+    <!-- Tab content -->
+    <div class="tab-content mt-3" id="serviceCategoriesContent">
+        <!-- S3/Object Storage Actions -->
+        <div class="tab-pane fade show active" id="s3" role="tabpanel" aria-labelledby="s3-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Action</th>
+                            <th>OCI Verb</th>
+                            <th>OCI Resource</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>s3:ListBucket</td>
+                            <td>inspect</td>
+                            <td>object-storage bucket</td>
+                            <td>View bucket contents (list objects)</td>
+                        </tr>
+                        <tr>
+                            <td>s3:GetObject</td>
+                            <td>read</td>
+                            <td>object-storage object</td>
+                            <td>Retrieve/download objects from a bucket</td>
+                        </tr>
+                        <tr>
+                            <td>s3:PutObject</td>
+                            <td>manage</td>
+                            <td>object-storage object</td>
+                            <td>Upload objects to a bucket</td>
+                        </tr>
+                        <tr>
+                            <td>s3:DeleteObject</td>
+                            <td>manage</td>
+                            <td>object-storage object</td>
+                            <td>Delete objects from a bucket</td>
+                        </tr>
+                        <tr>
+                            <td>s3:CreateBucket</td>
+                            <td>manage</td>
+                            <td>object-storage bucket</td>
+                            <td>Create new buckets</td>
+                        </tr>
+                        <tr>
+                            <td>s3:DeleteBucket</td>
+                            <td>manage</td>
+                            <td>object-storage bucket</td>
+                            <td>Delete buckets</td>
+                        </tr>
+                        <tr>
+                            <td>s3:GetBucketLocation</td>
+                            <td>read</td>
+                            <td>object-storage bucket</td>
+                            <td>View bucket location/region</td>
+                        </tr>
+                        <tr>
+                            <td>s3:GetBucketPolicy</td>
+                            <td>read</td>
+                            <td>object-storage bucket</td>
+                            <td>View bucket policies</td>
+                        </tr>
+                        <tr>
+                            <td>s3:PutBucketPolicy</td>
+                            <td>manage</td>
+                            <td>object-storage bucket</td>
+                            <td>Set/modify bucket policies</td>
+                        </tr>
+                        <tr>
+                            <td>s3:GetObjectTagging</td>
+                            <td>read</td>
+                            <td>object-storage object</td>
+                            <td>View object tags</td>
+                        </tr>
+                        <tr>
+                            <td>s3:PutObjectTagging</td>
+                            <td>manage</td>
+                            <td>object-storage object</td>
+                            <td>Set/modify object tags</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- EC2/Compute Actions -->
+        <div class="tab-pane fade" id="ec2" role="tabpanel" aria-labelledby="ec2-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Action</th>
+                            <th>OCI Verb</th>
+                            <th>OCI Resource</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ec2:DescribeInstances</td>
+                            <td>inspect</td>
+                            <td>compute instance</td>
+                            <td>View instances and their details</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:RunInstances</td>
+                            <td>manage</td>
+                            <td>compute instance</td>
+                            <td>Create/launch instances</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:StartInstances</td>
+                            <td>use</td>
+                            <td>compute instance</td>
+                            <td>Start stopped instances</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:StopInstances</td>
+                            <td>use</td>
+                            <td>compute instance</td>
+                            <td>Stop running instances</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:TerminateInstances</td>
+                            <td>manage</td>
+                            <td>compute instance</td>
+                            <td>Terminate/delete instances</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:CreateImage</td>
+                            <td>manage</td>
+                            <td>compute image</td>
+                            <td>Create custom images from instances</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:DescribeImages</td>
+                            <td>inspect</td>
+                            <td>compute image</td>
+                            <td>View images and their details</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:DeleteImage</td>
+                            <td>manage</td>
+                            <td>compute image</td>
+                            <td>Delete custom images</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:CreateVolume</td>
+                            <td>manage</td>
+                            <td>compute volume</td>
+                            <td>Create block volumes</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:DeleteVolume</td>
+                            <td>manage</td>
+                            <td>compute volume</td>
+                            <td>Delete block volumes</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:AttachVolume</td>
+                            <td>manage</td>
+                            <td>compute volume</td>
+                            <td>Attach volumes to instances</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:DetachVolume</td>
+                            <td>manage</td>
+                            <td>compute volume</td>
+                            <td>Detach volumes from instances</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- IAM/Identity Actions -->
+        <div class="tab-pane fade" id="iam" role="tabpanel" aria-labelledby="iam-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Action</th>
+                            <th>OCI Verb</th>
+                            <th>OCI Resource</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>iam:ListRoles</td>
+                            <td>inspect</td>
+                            <td>identity group</td>
+                            <td>View roles/groups in the account</td>
+                        </tr>
+                        <tr>
+                            <td>iam:GetRole</td>
+                            <td>read</td>
+                            <td>identity group</td>
+                            <td>View detailed information about a role/group</td>
+                        </tr>
+                        <tr>
+                            <td>iam:CreateRole</td>
+                            <td>manage</td>
+                            <td>identity group</td>
+                            <td>Create new roles/groups</td>
+                        </tr>
+                        <tr>
+                            <td>iam:DeleteRole</td>
+                            <td>manage</td>
+                            <td>identity group</td>
+                            <td>Delete roles/groups</td>
+                        </tr>
+                        <tr>
+                            <td>iam:ListUsers</td>
+                            <td>inspect</td>
+                            <td>identity user</td>
+                            <td>View users in the account</td>
+                        </tr>
+                        <tr>
+                            <td>iam:GetUser</td>
+                            <td>read</td>
+                            <td>identity user</td>
+                            <td>View detailed information about a user</td>
+                        </tr>
+                        <tr>
+                            <td>iam:CreateUser</td>
+                            <td>manage</td>
+                            <td>identity user</td>
+                            <td>Create new users</td>
+                        </tr>
+                        <tr>
+                            <td>iam:DeleteUser</td>
+                            <td>manage</td>
+                            <td>identity user</td>
+                            <td>Delete users</td>
+                        </tr>
+                        <tr>
+                            <td>iam:ListGroups</td>
+                            <td>inspect</td>
+                            <td>identity group</td>
+                            <td>View groups in the account</td>
+                        </tr>
+                        <tr>
+                            <td>iam:GetGroup</td>
+                            <td>read</td>
+                            <td>identity group</td>
+                            <td>View detailed information about a group</td>
+                        </tr>
+                        <tr>
+                            <td>iam:CreateGroup</td>
+                            <td>manage</td>
+                            <td>identity group</td>
+                            <td>Create new groups</td>
+                        </tr>
+                        <tr>
+                            <td>iam:DeleteGroup</td>
+                            <td>manage</td>
+                            <td>identity group</td>
+                            <td>Delete groups</td>
+                        </tr>
+                        <tr>
+                            <td>iam:CreatePolicy</td>
+                            <td>manage</td>
+                            <td>identity policy</td>
+                            <td>Create new policies</td>
+                        </tr>
+                        <tr>
+                            <td>iam:DeletePolicy</td>
+                            <td>manage</td>
+                            <td>identity policy</td>
+                            <td>Delete policies</td>
+                        </tr>
+                        <tr>
+                            <td>iam:GetPolicy</td>
+                            <td>read</td>
+                            <td>identity policy</td>
+                            <td>View detailed information about a policy</td>
+                        </tr>
+                        <tr>
+                            <td>iam:ListPolicies</td>
+                            <td>inspect</td>
+                            <td>identity policy</td>
+                            <td>View policies in the account</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- VPC/Networking Actions -->
+        <div class="tab-pane fade" id="vpc" role="tabpanel" aria-labelledby="vpc-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Action</th>
+                            <th>OCI Verb</th>
+                            <th>OCI Resource</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ec2:CreateVpc</td>
+                            <td>manage</td>
+                            <td>vcn vcn</td>
+                            <td>Create Virtual Cloud Networks</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:DeleteVpc</td>
+                            <td>manage</td>
+                            <td>vcn vcn</td>
+                            <td>Delete Virtual Cloud Networks</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:CreateSubnet</td>
+                            <td>manage</td>
+                            <td>vcn subnet</td>
+                            <td>Create subnets in VCNs</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:DeleteSubnet</td>
+                            <td>manage</td>
+                            <td>vcn subnet</td>
+                            <td>Delete subnets from VCNs</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:CreateSecurityGroup</td>
+                            <td>manage</td>
+                            <td>vcn network-security-group</td>
+                            <td>Create security groups (NSGs in OCI)</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:DeleteSecurityGroup</td>
+                            <td>manage</td>
+                            <td>vcn network-security-group</td>
+                            <td>Delete security groups (NSGs in OCI)</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:CreateRouteTable</td>
+                            <td>manage</td>
+                            <td>vcn route-table</td>
+                            <td>Create route tables</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:DeleteRouteTable</td>
+                            <td>manage</td>
+                            <td>vcn route-table</td>
+                            <td>Delete route tables</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:CreateInternetGateway</td>
+                            <td>manage</td>
+                            <td>vcn internet-gateway</td>
+                            <td>Create internet gateways</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:DeleteInternetGateway</td>
+                            <td>manage</td>
+                            <td>vcn internet-gateway</td>
+                            <td>Delete internet gateways</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:AllocateAddress</td>
+                            <td>manage</td>
+                            <td>vcn public-ip</td>
+                            <td>Allocate public/elastic IP addresses</td>
+                        </tr>
+                        <tr>
+                            <td>ec2:ReleaseAddress</td>
+                            <td>manage</td>
+                            <td>vcn public-ip</td>
+                            <td>Release public/elastic IP addresses</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- RDS/Database Actions -->
+        <div class="tab-pane fade" id="db" role="tabpanel" aria-labelledby="db-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Action</th>
+                            <th>OCI Verb</th>
+                            <th>OCI Resource</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>rds:DescribeDBInstances</td>
+                            <td>inspect</td>
+                            <td>database db-system</td>
+                            <td>View database instances and their details</td>
+                        </tr>
+                        <tr>
+                            <td>rds:CreateDBInstance</td>
+                            <td>manage</td>
+                            <td>database db-system</td>
+                            <td>Create new database instances</td>
+                        </tr>
+                        <tr>
+                            <td>rds:DeleteDBInstance</td>
+                            <td>manage</td>
+                            <td>database db-system</td>
+                            <td>Delete database instances</td>
+                        </tr>
+                        <tr>
+                            <td>rds:StartDBInstance</td>
+                            <td>use</td>
+                            <td>database db-system</td>
+                            <td>Start stopped database instances</td>
+                        </tr>
+                        <tr>
+                            <td>rds:StopDBInstance</td>
+                            <td>use</td>
+                            <td>database db-system</td>
+                            <td>Stop running database instances</td>
+                        </tr>
+                        <tr>
+                            <td>rds:CreateDBSnapshot</td>
+                            <td>manage</td>
+                            <td>database backup</td>
+                            <td>Create database backups/snapshots</td>
+                        </tr>
+                        <tr>
+                            <td>rds:DeleteDBSnapshot</td>
+                            <td>manage</td>
+                            <td>database backup</td>
+                            <td>Delete database backups/snapshots</td>
+                        </tr>
+                        <tr>
+                            <td>rds:ModifyDBInstance</td>
+                            <td>manage</td>
+                            <td>database db-system</td>
+                            <td>Modify database instance configuration</td>
+                        </tr>
+                        <tr>
+                            <td>rds:RestoreDBInstanceFromSnapshot</td>
+                            <td>manage</td>
+                            <td>database db-system</td>
+                            <td>Restore database from backup/snapshot</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Lambda/Functions Actions -->
+        <div class="tab-pane fade" id="lambda" role="tabpanel" aria-labelledby="lambda-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Action</th>
+                            <th>OCI Verb</th>
+                            <th>OCI Resource</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>lambda:ListFunctions</td>
+                            <td>inspect</td>
+                            <td>functions function</td>
+                            <td>View functions in the account</td>
+                        </tr>
+                        <tr>
+                            <td>lambda:GetFunction</td>
+                            <td>read</td>
+                            <td>functions function</td>
+                            <td>View detailed information about a function</td>
+                        </tr>
+                        <tr>
+                            <td>lambda:CreateFunction</td>
+                            <td>manage</td>
+                            <td>functions function</td>
+                            <td>Create new functions</td>
+                        </tr>
+                        <tr>
+                            <td>lambda:DeleteFunction</td>
+                            <td>manage</td>
+                            <td>functions function</td>
+                            <td>Delete functions</td>
+                        </tr>
+                        <tr>
+                            <td>lambda:InvokeFunction</td>
+                            <td>use</td>
+                            <td>functions function</td>
+                            <td>Execute/invoke functions</td>
+                        </tr>
+                        <tr>
+                            <td>lambda:UpdateFunctionCode</td>
+                            <td>manage</td>
+                            <td>functions function</td>
+                            <td>Update function code</td>
+                        </tr>
+                        <tr>
+                            <td>lambda:UpdateFunctionConfiguration</td>
+                            <td>manage</td>
+                            <td>functions function</td>
+                            <td>Update function configuration</td>
+                        </tr>
+                        <tr>
+                            <td>lambda:GetFunctionConfiguration</td>
+                            <td>read</td>
+                            <td>functions function</td>
+                            <td>View function configuration</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- KMS/Vault Actions -->
+        <div class="tab-pane fade" id="kms" role="tabpanel" aria-labelledby="kms-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Action</th>
+                            <th>OCI Verb</th>
+                            <th>OCI Resource</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>kms:ListKeys</td>
+                            <td>inspect</td>
+                            <td>vault key</td>
+                            <td>View encryption keys in the account</td>
+                        </tr>
+                        <tr>
+                            <td>kms:DescribeKey</td>
+                            <td>read</td>
+                            <td>vault key</td>
+                            <td>View detailed information about a key</td>
+                        </tr>
+                        <tr>
+                            <td>kms:CreateKey</td>
+                            <td>manage</td>
+                            <td>vault key</td>
+                            <td>Create new encryption keys</td>
+                        </tr>
+                        <tr>
+                            <td>kms:ScheduleKeyDeletion</td>
+                            <td>manage</td>
+                            <td>vault key</td>
+                            <td>Schedule key deletion</td>
+                        </tr>
+                        <tr>
+                            <td>kms:Encrypt</td>
+                            <td>use</td>
+                            <td>vault key</td>
+                            <td>Use key to encrypt data</td>
+                        </tr>
+                        <tr>
+                            <td>kms:Decrypt</td>
+                            <td>use</td>
+                            <td>vault key</td>
+                            <td>Use key to decrypt data</td>
+                        </tr>
+                        <tr>
+                            <td>kms:GenerateDataKey</td>
+                            <td>use</td>
+                            <td>vault key</td>
+                            <td>Generate data key for encryption</td>
+                        </tr>
+                        <tr>
+                            <td>secretsmanager:GetSecretValue</td>
+                            <td>read</td>
+                            <td>vault secret</td>
+                            <td>Retrieve secret values</td>
+                        </tr>
+                        <tr>
+                            <td>secretsmanager:CreateSecret</td>
+                            <td>manage</td>
+                            <td>vault secret</td>
+                            <td>Create new secrets</td>
+                        </tr>
+                        <tr>
+                            <td>secretsmanager:DeleteSecret</td>
+                            <td>manage</td>
+                            <td>vault secret</td>
+                            <td>Delete secrets</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- DynamoDB/NoSQL Actions -->
+        <div class="tab-pane fade" id="dynamodb" role="tabpanel" aria-labelledby="dynamodb-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Action</th>
+                            <th>OCI Verb</th>
+                            <th>OCI Resource</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>dynamodb:ListTables</td>
+                            <td>inspect</td>
+                            <td>nosql-database table</td>
+                            <td>View NoSQL tables in the account</td>
+                        </tr>
+                        <tr>
+                            <td>dynamodb:DescribeTable</td>
+                            <td>read</td>
+                            <td>nosql-database table</td>
+                            <td>View detailed information about a table</td>
+                        </tr>
+                        <tr>
+                            <td>dynamodb:CreateTable</td>
+                            <td>manage</td>
+                            <td>nosql-database table</td>
+                            <td>Create new NoSQL tables</td>
+                        </tr>
+                        <tr>
+                            <td>dynamodb:DeleteTable</td>
+                            <td>manage</td>
+                            <td>nosql-database table</td>
+                            <td>Delete NoSQL tables</td>
+                        </tr>
+                        <tr>
+                            <td>dynamodb:GetItem</td>
+                            <td>read</td>
+                            <td>nosql-database row</td>
+                            <td>Retrieve items from a table</td>
+                        </tr>
+                        <tr>
+                            <td>dynamodb:PutItem</td>
+                            <td>manage</td>
+                            <td>nosql-database row</td>
+                            <td>Add/update items in a table</td>
+                        </tr>
+                        <tr>
+                            <td>dynamodb:DeleteItem</td>
+                            <td>manage</td>
+                            <td>nosql-database row</td>
+                            <td>Delete items from a table</td>
+                        </tr>
+                        <tr>
+                            <td>dynamodb:Query</td>
+                            <td>read</td>
+                            <td>nosql-database table</td>
+                            <td>Query items in a table</td>
+                        </tr>
+                        <tr>
+                            <td>dynamodb:Scan</td>
+                            <td>read</td>
+                            <td>nosql-database table</td>
+                            <td>Scan entire table</td>
+                        </tr>
+                        <tr>
+                            <td>dynamodb:UpdateItem</td>
+                            <td>manage</td>
+                            <td>nosql-database row</td>
+                            <td>Update items in a table</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Common Patterns -->
+        <div class="tab-pane fade" id="patterns" role="tabpanel" aria-labelledby="patterns-tab">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>AWS Action Pattern</th>
+                            <th>OCI Verb</th>
+                            <th>OCI Resource</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>*:List*</td>
+                            <td>inspect</td>
+                            <td>{service}</td>
+                            <td>View resources in a service</td>
+                        </tr>
+                        <tr>
+                            <td>*:Get*</td>
+                            <td>read</td>
+                            <td>{service}</td>
+                            <td>View detailed information about a resource</td>
+                        </tr>
+                        <tr>
+                            <td>*:Describe*</td>
+                            <td>inspect</td>
+                            <td>{service}</td>
+                            <td>View resources and their details</td>
+                        </tr>
+                        <tr>
+                            <td>*:Create*</td>
+                            <td>manage</td>
+                            <td>{service}</td>
+                            <td>Create new resources</td>
+                        </tr>
+                        <tr>
+                            <td>*:Delete*</td>
+                            <td>manage</td>
+                            <td>{service}</td>
+                            <td>Delete resources</td>
+                        </tr>
+                        <tr>
+                            <td>*:Update*</td>
+                            <td>manage</td>
+                            <td>{service}</td>
+                            <td>Update/modify resources</td>
+                        </tr>
+                        <tr>
+                            <td>*:Put*</td>
+                            <td>manage</td>
+                            <td>{service}</td>
+                            <td>Add/update resources or their attributes</td>
+                        </tr>
+                        <tr>
+                            <td>*:Start*</td>
+                            <td>use</td>
+                            <td>{service}</td>
+                            <td>Start/launch resources</td>
+                        </tr>
+                        <tr>
+                            <td>*:Stop*</td>
+                            <td>use</td>
+                            <td>{service}</td>
+                            <td>Stop/shutdown resources</td>
+                        </tr>
+                        <tr>
+                            <td>*:Enable*</td>
+                            <td>manage</td>
+                            <td>{service}</td>
+                            <td>Enable features or services</td>
+                        </tr>
+                        <tr>
+                            <td>*:Disable*</td>
+                            <td>manage</td>
+                            <td>{service}</td>
+                            <td>Disable features or services</td>
+                        </tr>
+                        <tr>
+                            <td>*:*</td>
+                            <td>manage</td>
+                            <td>all-resources</td>
+                            <td>Wildcard for all actions (administrative access)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>OCI Verbs & Their Meanings</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>OCI Verb</th>
+                        <th>Description</th>
+                        <th>AWS Equivalent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>inspect</code></td>
+                        <td>View resources but not their detailed contents (list resources)</td>
+                        <td>List*, Describe*</td>
+                    </tr>
+                    <tr>
+                        <td><code>read</code></td>
+                        <td>View detailed information about resources (see contents)</td>
+                        <td>Get*</td>
+                    </tr>
+                    <tr>
+                        <td><code>use</code></td>
+                        <td>Use resources without modifying them (execute, run)</td>
+                        <td>Start*, Stop*, Invoke*</td>
+                    </tr>
+                    <tr>
+                        <td><code>manage</code></td>
+                        <td>Create, update, delete resources (full control)</td>
+                        <td>Create*, Delete*, Update*, Put*</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="mt-3">When translating from AWS actions to OCI, these basic verbs are combined with resource types to create OCI policy statements.</p>
+            <p>For example, <code>s3:GetObject</code> becomes <code>Allow group [group] to read object-storage objects in tenancy</code></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -10,13 +10,25 @@ from translator import SERVICE_MAPPINGS, OCI_RESOURCE_TYPES
 logger = logging.getLogger(__name__)
 
 # OCI policy format regex patterns
-POLICY_PATTERN = r"^Allow\s+group\s+[\w\s-]+\s+to\s+(inspect|read|use|manage)\s+[\w\s-]+\s+in\s+(tenancy|compartment)(\s+where\s+.+)?$"
+# Standard OCI policy format
+STD_POLICY_PATTERN = r"^Allow\s+group\s+[\w\s-]+\s+to\s+(inspect|read|use|manage)\s+[\w\s-]+\s+in\s+(tenancy|compartment)(\s+where\s+.+)?$"
+# Identity Domains policy format
+ID_POLICY_PATTERN = r"^Allow\s+group\s+[\w\s-]+\s+(iam:admin|iam:read|iam:use)\s+resource-type\.[\w-]+(\s+where\s+.+)?$"
+# Combined pattern for validation
+POLICY_PATTERN = f"({STD_POLICY_PATTERN})|({ID_POLICY_PATTERN})"
+
 GROUP_NAME_PATTERN = r"^[\w\s-]+$"
 RESOURCE_PATTERN = r"^[\w\s-]+$"
 CONDITION_PATTERN = r"^[\w\s().=<>'\"]+(\s+(and|or)\s+[\w\s().=<>'\"]+)*$"
 
 # OCI verbs
 OCI_VERBS = ["inspect", "read", "use", "manage"]
+
+# Identity Domains verbs
+ID_VERBS = ["iam:admin", "iam:read", "iam:use"]
+
+# Combined verbs for validation
+ALL_VERBS = OCI_VERBS + ID_VERBS
 
 # OCI policy condition variable patterns
 OCI_CONDITION_VARIABLES = {
@@ -65,33 +77,59 @@ def validate_policy(policy):
         if not line:
             continue
             
+        # Check if this is a standard OCI policy or Identity Domains policy
+        is_id_domains = False
+        if re.match(ID_POLICY_PATTERN, line, re.IGNORECASE):
+            is_id_domains = True
+        
         # Validate basic policy syntax
         if not re.match(POLICY_PATTERN, line, re.IGNORECASE):
             errors.append(f"Syntax Error at line {line_num}: {line}")
             continue
             
         # Extract and validate group name
-        match = re.search(r"group\s+([\w\s-]+)\s+to", line)
+        if is_id_domains:
+            match = re.search(r"group\s+([\w\s-]+)\s+(iam:admin|iam:read|iam:use)", line)
+        else:
+            match = re.search(r"group\s+([\w\s-]+)\s+to", line)
+            
         if match:
             group_name = match.group(1).strip()
             if not re.match(GROUP_NAME_PATTERN, group_name):
                 errors.append(f"Invalid group name at line {line_num}: {group_name}")
-                
+        
         # Validate verb
-        match = re.search(r"to\s+(inspect|read|use|manage)\s+", line, re.IGNORECASE)
-        if not match:
-            errors.append(f"Invalid verb at line {line_num}: Use one of 'inspect', 'read', 'use', or 'manage'")
+        if is_id_domains:
+            match = re.search(r"group\s+[\w\s-]+\s+(iam:admin|iam:read|iam:use)", line, re.IGNORECASE)
+            if not match:
+                errors.append(f"Invalid verb at line {line_num}: Use one of 'iam:admin', 'iam:read', or 'iam:use' for Identity Domains policies")
+            else:
+                verb = match.group(1).lower()
+                if verb not in ID_VERBS:
+                    errors.append(f"Invalid Identity Domains verb at line {line_num}: '{verb}'. Valid verbs are: {', '.join(ID_VERBS)}")
         else:
-            verb = match.group(1).lower()
-            if verb not in OCI_VERBS:
-                errors.append(f"Invalid verb at line {line_num}: '{verb}'. Valid verbs are: {', '.join(OCI_VERBS)}")
-            
+            match = re.search(r"to\s+(inspect|read|use|manage)\s+", line, re.IGNORECASE)
+            if not match:
+                errors.append(f"Invalid verb at line {line_num}: Use one of 'inspect', 'read', 'use', or 'manage'")
+            else:
+                verb = match.group(1).lower()
+                if verb not in OCI_VERBS:
+                    errors.append(f"Invalid verb at line {line_num}: '{verb}'. Valid verbs are: {', '.join(OCI_VERBS)}")
+        
         # Validate resource
-        match = re.search(r"(inspect|read|use|manage)\s+([\w\s-]+)\s+in", line, re.IGNORECASE)
-        if match:
-            resource_str = match.group(2).strip()
-            if not validate_oci_resource(resource_str):
-                errors.append(f"Invalid resource at line {line_num}: '{resource_str}'. Not a valid OCI resource.")
+        if is_id_domains:
+            match = re.search(r"(iam:admin|iam:read|iam:use)\s+resource-type\.([\w-]+)", line, re.IGNORECASE)
+            if match:
+                resource_str = match.group(2).strip()
+                # For Identity Domains, resource types are service names
+                if not resource_str in SERVICE_MAPPINGS.values() and not resource_str in OCI_RESOURCE_TYPES.keys():
+                    errors.append(f"Invalid resource type at line {line_num}: '{resource_str}'. Not a valid OCI service.")
+        else:
+            match = re.search(r"(inspect|read|use|manage)\s+([\w\s-]+)\s+in", line, re.IGNORECASE)
+            if match:
+                resource_str = match.group(2).strip()
+                if not validate_oci_resource(resource_str):
+                    errors.append(f"Invalid resource at line {line_num}: '{resource_str}'. Not a valid OCI resource.")
                 
         # Validate conditions if present
         if "where" in line:

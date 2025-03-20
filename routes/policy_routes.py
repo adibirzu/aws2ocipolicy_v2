@@ -45,6 +45,14 @@ def iam_policy():
 def service_mappings():
     return render_template('service_mappings.html')
 
+@policy_routes.route('/action-mappings')
+def action_mappings():
+    return render_template('action_mappings.html')
+
+@policy_routes.route('/policy-differences')
+def policy_differences():
+    return render_template('policy_differences.html')
+
 @policy_routes.route('/oci-reference-policies')
 def oci_reference_policies():
     # Try to load policy reference data if it exists
@@ -73,12 +81,13 @@ def generate_simple_policy():
 
         aws_policy = data.get("aws_policy", "")
         oci_group = data.get("oci_group", "")
+        use_identity_domains = data.get("use_identity_domains", False)
         
         if not aws_policy or not oci_group:
             return jsonify({"error": "Missing required fields: aws_policy and oci_group"}), 400
         
-        logger.info(f"Generating simple policy for group: {oci_group}")
-        oci_policy = translate_simple_policy(aws_policy, oci_group)
+        logger.info(f"Generating simple policy for group: {oci_group}, use_identity_domains: {use_identity_domains}")
+        oci_policy = translate_simple_policy(aws_policy, oci_group, use_identity_domains)
         errors = validate_policy(oci_policy)
         
         return jsonify({"policy": oci_policy, "errors": errors})
