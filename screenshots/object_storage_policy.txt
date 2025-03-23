@@ -1,0 +1,44 @@
++-------------------------------------------------------+
+|            Object Storage Policy Translation          |
++-------------------------------------------------------+
+
+AWS S3 Policy:
++-----------------------------------------------------+
+| {                                                   |
+|   "Version": "2012-10-17",                          |
+|   "Statement": [{                                   |
+|     "Effect": "Allow",                              |
+|     "Action": [                                     |
+|       "s3:GetObject",                               |
+|       "s3:PutObject",                               |
+|       "s3:ListBucket"                               |
+|     ],                                              |
+|     "Resource": [                                   |
+|       "arn:aws:s3:::my-bucket",                     |
+|       "arn:aws:s3:::my-bucket/*"                    |
+|     ]                                               |
+|   }]                                                |
+| }                                                   |
++-----------------------------------------------------+
+
+OCI Group Name: StorageAdmins
+
+Bucket Name (optional): my-bucket
+
+[Translate Policy]
+
+Translated OCI Policy:
++-----------------------------------------------------+
+| # Bucket Access Policies                            |
+| Allow group StorageAdmins to read buckets in tenancy|
+| Allow group StorageAdmins to manage objects in      |
+| tenancy where target.bucket.name='my-bucket'        |
+|                                                     |
+| # Object Operations                                 |
+| Allow group StorageAdmins to read objects in tenancy|
+| where target.bucket.name='my-bucket'                |
+| Allow group StorageAdmins to manage objects in      |
+| tenancy where target.bucket.name='my-bucket'        |
++-----------------------------------------------------+
+
+[  Save Policy  ]  [  Copy to Clipboard  ]

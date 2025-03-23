@@ -1,0 +1,38 @@
++-------------------------------------------------------+
+|                 OCI Reference Policies                |
++-------------------------------------------------------+
+
+[Compute] [Storage] [Network] [Database] [Identity] [Security] 
+
+# Compute Policy Reference
++-----------------------------------------------------+
+| Resource Types:                                     |
+| ----------------                                    |
+| - instance-family                                   |
+| - instances                                         |
+| - volume-family                                     |
+| - boot-volume-family                                |
+| - images                                            |
+| - instance-configurations                           |
+| - instance-pools                                    |
+|                                                     |
+| Verbs:                                              |
+| ----------------                                    |
+| - manage  (Full control)                            |
+| - use     (Start/stop/restart operations)           |
+| - read    (View resource details)                   |
+| - inspect (List resources)                          |
+|                                                     |
+| Common Compute Policies:                            |
+| ----------------                                    |
+| Allow group ComputeAdmins to manage instance-family |
+| in tenancy                                          |
+|                                                     |
+| Allow group ComputeUsers to read instance-family    |
+| in tenancy                                          |
+|                                                     |
+| Allow group Operators to use instance-family        |
+| in tenancy                                          |
++-----------------------------------------------------+
+
+[Update Policy Reference Data]

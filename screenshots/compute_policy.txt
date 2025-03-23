@@ -1,0 +1,44 @@
++-------------------------------------------------------+
+|                 Compute Policy Translation            |
++-------------------------------------------------------+
+
+AWS EC2 Policy:
++-----------------------------------------------------+
+| {                                                   |
+|   "Version": "2012-10-17",                          |
+|   "Statement": [{                                   |
+|     "Effect": "Allow",                              |
+|     "Action": [                                     |
+|       "ec2:RunInstances",                           |
+|       "ec2:DescribeInstances",                      |
+|       "ec2:StartInstances",                         |
+|       "ec2:StopInstances"                           |
+|     ],                                              |
+|     "Resource": ["*"]                               |
+|   }]                                                |
+| }                                                   |
++-----------------------------------------------------+
+
+OCI Group Name: ComputeAdmins
+
+Instance OCID (optional): 
+  [ocid1.instance.oc1.iad.aaaaaaaa......]
+
+[Translate Policy]
+
+Translated OCI Policy:
++-----------------------------------------------------+
+| # Instance Management Policies                      |
+| Allow group ComputeAdmins to manage instance-family |
+| in tenancy                                          |
+|                                                     |
+| # Related Volume Access                             |
+| Allow group ComputeAdmins to manage volume-family   |
+| in tenancy                                          |
+|                                                     |
+| # Network Access for Instances                      |
+| Allow group ComputeAdmins to read                   |
+| virtual-network-family in tenancy                   |
++-----------------------------------------------------+
+
+[  Save Policy  ]  [  Copy to Clipboard  ]

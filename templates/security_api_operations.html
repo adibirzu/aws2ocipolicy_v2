@@ -1,0 +1,582 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>OCI Security API Operations and Permissions</h2>
+    <p>This page details the specific API operations for OCI Security services and the permissions required for each operation. Use this information to create precise OCI policies when migrating from AWS.</p>
+    
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Security API Operations Reference</h5>
+        </div>
+        <div class="card-body">
+            <p>In OCI, security operations require specific permission strings that are more granular than AWS IAM actions. This reference helps you map AWS IAM, KMS, and other security service permissions to equivalent OCI security permissions.</p>
+            
+            <h6 class="mt-3">OCI Security Resource Types</h6>
+            <p>OCI uses several resource types to manage security resources:</p>
+            <ul>
+                <li><strong>compartment</strong> - A logical container for organizing resources</li>
+                <li><strong>tenancy</strong> - The root compartment of your OCI account</li>
+                <li><strong>user</strong> - An individual user account</li>
+                <li><strong>group</strong> - A collection of users</li>
+                <li><strong>dynamic-group</strong> - A group of compute instances or other resources that match specified criteria</li>
+                <li><strong>policy</strong> - An IAM policy defining permissions</li>
+                <li><strong>api-key</strong> - API signing key associated with a user</li>
+                <li><strong>vault</strong> - Container for cryptographic keys and secrets</li>
+                <li><strong>key</strong> - Cryptographic key used for encryption</li>
+                <li><strong>secret</strong> - Sensitive information stored securely</li>
+                <li><strong>certificate</strong> - SSL/TLS certificate</li>
+            </ul>
+            
+            <div class="alert alert-info">
+                <strong>Important:</strong> OCI uses Resource Principals, which allow instances, functions, and other OCI resources to make API calls without explicit credentials. Resource Principals in OCI include <strong>instance-principal</strong>, <strong>function-principal</strong>, <strong>resource-principal</strong>, and <strong>dynamic-group-principal</strong>.
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Identity Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListUsers</td>
+                            <td>IDENTITY_INSPECT</td>
+                            <td>iam:ListUsers</td>
+                            <td>Permission to list all users in a tenancy</td>
+                        </tr>
+                        <tr>
+                            <td>GetUser</td>
+                            <td>IDENTITY_INSPECT</td>
+                            <td>iam:GetUser</td>
+                            <td>Permission to get information about a specific user</td>
+                        </tr>
+                        <tr>
+                            <td>CreateUser</td>
+                            <td>IDENTITY_CREATE</td>
+                            <td>iam:CreateUser</td>
+                            <td>Create a new user</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateUser</td>
+                            <td>IDENTITY_UPDATE</td>
+                            <td>iam:UpdateUser</td>
+                            <td>Update a user</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteUser</td>
+                            <td>IDENTITY_DELETE</td>
+                            <td>iam:DeleteUser</td>
+                            <td>Delete a user</td>
+                        </tr>
+                        <tr>
+                            <td>ListGroups</td>
+                            <td>IDENTITY_INSPECT</td>
+                            <td>iam:ListGroups</td>
+                            <td>Permission to list all groups in a tenancy</td>
+                        </tr>
+                        <tr>
+                            <td>GetGroup</td>
+                            <td>IDENTITY_INSPECT</td>
+                            <td>iam:GetGroup</td>
+                            <td>Permission to get information about a specific group</td>
+                        </tr>
+                        <tr>
+                            <td>CreateGroup</td>
+                            <td>IDENTITY_CREATE</td>
+                            <td>iam:CreateGroup</td>
+                            <td>Create a new group</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateGroup</td>
+                            <td>IDENTITY_UPDATE</td>
+                            <td>iam:UpdateGroup</td>
+                            <td>Update a group</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteGroup</td>
+                            <td>IDENTITY_DELETE</td>
+                            <td>iam:DeleteGroup</td>
+                            <td>Delete a group</td>
+                        </tr>
+                        <tr>
+                            <td>AddUserToGroup</td>
+                            <td>IDENTITY_UPDATE</td>
+                            <td>iam:AddUserToGroup</td>
+                            <td>Add a user to a group</td>
+                        </tr>
+                        <tr>
+                            <td>RemoveUserFromGroup</td>
+                            <td>IDENTITY_UPDATE</td>
+                            <td>iam:RemoveUserFromGroup</td>
+                            <td>Remove a user from a group</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Key Vault Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListVaults</td>
+                            <td>VAULT_INSPECT</td>
+                            <td>kms:ListAliases</td>
+                            <td>Permission to list all vaults in a compartment</td>
+                        </tr>
+                        <tr>
+                            <td>GetVault</td>
+                            <td>VAULT_INSPECT</td>
+                            <td>kms:DescribeKey</td>
+                            <td>Permission to get information about a specific vault</td>
+                        </tr>
+                        <tr>
+                            <td>CreateVault</td>
+                            <td>VAULT_CREATE</td>
+                            <td>kms:CreateKey</td>
+                            <td>Create a new vault</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateVault</td>
+                            <td>VAULT_UPDATE</td>
+                            <td>kms:UpdateAlias</td>
+                            <td>Update a vault</td>
+                        </tr>
+                        <tr>
+                            <td>ScheduleVaultDeletion</td>
+                            <td>VAULT_DELETE</td>
+                            <td>kms:ScheduleKeyDeletion</td>
+                            <td>Schedule a vault for deletion</td>
+                        </tr>
+                        <tr>
+                            <td>CancelVaultDeletion</td>
+                            <td>VAULT_UPDATE</td>
+                            <td>kms:CancelKeyDeletion</td>
+                            <td>Cancel a scheduled vault deletion</td>
+                        </tr>
+                        <tr>
+                            <td>ListKeys</td>
+                            <td>KEY_INSPECT</td>
+                            <td>kms:ListKeys</td>
+                            <td>Permission to list all keys in a vault</td>
+                        </tr>
+                        <tr>
+                            <td>GetKey</td>
+                            <td>KEY_INSPECT</td>
+                            <td>kms:DescribeKey</td>
+                            <td>Permission to get information about a specific key</td>
+                        </tr>
+                        <tr>
+                            <td>CreateKey</td>
+                            <td>KEY_CREATE</td>
+                            <td>kms:CreateKey</td>
+                            <td>Create a new key</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateKey</td>
+                            <td>KEY_UPDATE</td>
+                            <td>kms:UpdateKeyDescription</td>
+                            <td>Update a key</td>
+                        </tr>
+                        <tr>
+                            <td>ScheduleKeyDeletion</td>
+                            <td>KEY_DELETE</td>
+                            <td>kms:ScheduleKeyDeletion</td>
+                            <td>Schedule a key for deletion</td>
+                        </tr>
+                        <tr>
+                            <td>CancelKeyDeletion</td>
+                            <td>KEY_UPDATE</td>
+                            <td>kms:CancelKeyDeletion</td>
+                            <td>Cancel a scheduled key deletion</td>
+                        </tr>
+                        <tr>
+                            <td>EnableKey</td>
+                            <td>KEY_UPDATE</td>
+                            <td>kms:EnableKey</td>
+                            <td>Enable a key</td>
+                        </tr>
+                        <tr>
+                            <td>DisableKey</td>
+                            <td>KEY_UPDATE</td>
+                            <td>kms:DisableKey</td>
+                            <td>Disable a key</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Key Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Encrypt</td>
+                            <td>KEY_USE</td>
+                            <td>kms:Encrypt</td>
+                            <td>Encrypt data using a key</td>
+                        </tr>
+                        <tr>
+                            <td>Decrypt</td>
+                            <td>KEY_USE</td>
+                            <td>kms:Decrypt</td>
+                            <td>Decrypt data using a key</td>
+                        </tr>
+                        <tr>
+                            <td>GenerateDataEncryptionKey</td>
+                            <td>KEY_USE</td>
+                            <td>kms:GenerateDataKey</td>
+                            <td>Generate a data encryption key</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Secret Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListSecrets</td>
+                            <td>SECRET_INSPECT</td>
+                            <td>secretsmanager:ListSecrets</td>
+                            <td>Permission to list all secrets in a compartment</td>
+                        </tr>
+                        <tr>
+                            <td>GetSecret</td>
+                            <td>SECRET_INSPECT</td>
+                            <td>secretsmanager:DescribeSecret</td>
+                            <td>Permission to get information about a specific secret</td>
+                        </tr>
+                        <tr>
+                            <td>GetSecretBundle</td>
+                            <td>SECRET_READ</td>
+                            <td>secretsmanager:GetSecretValue</td>
+                            <td>Permission to get the secret value</td>
+                        </tr>
+                        <tr>
+                            <td>CreateSecret</td>
+                            <td>SECRET_CREATE</td>
+                            <td>secretsmanager:CreateSecret</td>
+                            <td>Create a new secret</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateSecret</td>
+                            <td>SECRET_UPDATE</td>
+                            <td>secretsmanager:UpdateSecret</td>
+                            <td>Update a secret</td>
+                        </tr>
+                        <tr>
+                            <td>ScheduleSecretDeletion</td>
+                            <td>SECRET_DELETE</td>
+                            <td>secretsmanager:DeleteSecret</td>
+                            <td>Schedule a secret for deletion</td>
+                        </tr>
+                        <tr>
+                            <td>CancelSecretDeletion</td>
+                            <td>SECRET_UPDATE</td>
+                            <td>secretsmanager:RestoreSecret</td>
+                            <td>Cancel a scheduled secret deletion</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Certificate Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListCertificates</td>
+                            <td>CERTIFICATE_INSPECT</td>
+                            <td>acm:ListCertificates</td>
+                            <td>Permission to list all certificates in a compartment</td>
+                        </tr>
+                        <tr>
+                            <td>GetCertificate</td>
+                            <td>CERTIFICATE_INSPECT</td>
+                            <td>acm:DescribeCertificate</td>
+                            <td>Permission to get information about a specific certificate</td>
+                        </tr>
+                        <tr>
+                            <td>CreateCertificate</td>
+                            <td>CERTIFICATE_CREATE</td>
+                            <td>acm:RequestCertificate</td>
+                            <td>Create a new certificate</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateCertificate</td>
+                            <td>CERTIFICATE_UPDATE</td>
+                            <td>acm:UpdateCertificateOptions</td>
+                            <td>Update a certificate</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteCertificate</td>
+                            <td>CERTIFICATE_DELETE</td>
+                            <td>acm:DeleteCertificate</td>
+                            <td>Delete a certificate</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Creating AWS-to-OCI Security Policies</h5>
+        </div>
+        <div class="card-body">
+            <h6>Example: AWS Key Administrator Policy</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Create*",
+        "kms:Describe*",
+        "kms:Enable*",
+        "kms:List*",
+        "kms:Put*",
+        "kms:Update*",
+        "kms:Revoke*",
+        "kms:Disable*",
+        "kms:Get*",
+        "kms:Delete*",
+        "kms:TagResource",
+        "kms:UntagResource",
+        "kms:ScheduleKeyDeletion",
+        "kms:CancelKeyDeletion"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group KeyAdmins to manage vaults in compartment MyCompartment
+Allow group KeyAdmins to manage keys in compartment MyCompartment</pre>
+
+            <h6 class="mt-4">Example: AWS Key User Policy</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group KeyUsers to inspect keys in compartment MyCompartment
+Allow group KeyUsers to use keys in compartment MyCompartment</pre>
+
+            <h6 class="mt-4">Example: AWS Secret Administrator Policy</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group SecretAdmins to manage vaults in compartment MyCompartment
+Allow group SecretAdmins to manage secrets in compartment MyCompartment</pre>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Understanding OCI Security Permission Strings</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>OCI Permission String</th>
+                            <th>Description</th>
+                            <th>Used For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>IDENTITY_INSPECT</td>
+                            <td>View identity resources</td>
+                            <td>List and describe users, groups, and compartments</td>
+                        </tr>
+                        <tr>
+                            <td>IDENTITY_CREATE</td>
+                            <td>Create identity resources</td>
+                            <td>Create users, groups, and compartments</td>
+                        </tr>
+                        <tr>
+                            <td>IDENTITY_UPDATE</td>
+                            <td>Modify identity resources</td>
+                            <td>Update users, groups, and compartments</td>
+                        </tr>
+                        <tr>
+                            <td>IDENTITY_DELETE</td>
+                            <td>Delete identity resources</td>
+                            <td>Delete users, groups, and compartments</td>
+                        </tr>
+                        <tr>
+                            <td>VAULT_INSPECT</td>
+                            <td>View vault metadata</td>
+                            <td>List and describe vaults</td>
+                        </tr>
+                        <tr>
+                            <td>VAULT_CREATE</td>
+                            <td>Create vaults</td>
+                            <td>Create new vaults</td>
+                        </tr>
+                        <tr>
+                            <td>VAULT_UPDATE</td>
+                            <td>Modify vaults</td>
+                            <td>Update vault configurations</td>
+                        </tr>
+                        <tr>
+                            <td>VAULT_DELETE</td>
+                            <td>Delete vaults</td>
+                            <td>Schedule vaults for deletion</td>
+                        </tr>
+                        <tr>
+                            <td>KEY_INSPECT</td>
+                            <td>View key metadata</td>
+                            <td>List and describe keys</td>
+                        </tr>
+                        <tr>
+                            <td>KEY_CREATE</td>
+                            <td>Create keys</td>
+                            <td>Create new keys</td>
+                        </tr>
+                        <tr>
+                            <td>KEY_UPDATE</td>
+                            <td>Modify keys</td>
+                            <td>Update, enable, disable keys</td>
+                        </tr>
+                        <tr>
+                            <td>KEY_DELETE</td>
+                            <td>Delete keys</td>
+                            <td>Schedule keys for deletion</td>
+                        </tr>
+                        <tr>
+                            <td>KEY_USE</td>
+                            <td>Use keys for cryptographic operations</td>
+                            <td>Encrypt, decrypt, generate data keys</td>
+                        </tr>
+                        <tr>
+                            <td>SECRET_INSPECT</td>
+                            <td>View secret metadata</td>
+                            <td>List and describe secrets</td>
+                        </tr>
+                        <tr>
+                            <td>SECRET_READ</td>
+                            <td>Read secret values</td>
+                            <td>Get secret bundle</td>
+                        </tr>
+                        <tr>
+                            <td>SECRET_CREATE</td>
+                            <td>Create secrets</td>
+                            <td>Create new secrets</td>
+                        </tr>
+                        <tr>
+                            <td>SECRET_UPDATE</td>
+                            <td>Modify secrets</td>
+                            <td>Update secrets</td>
+                        </tr>
+                        <tr>
+                            <td>SECRET_DELETE</td>
+                            <td>Delete secrets</td>
+                            <td>Schedule secrets for deletion</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

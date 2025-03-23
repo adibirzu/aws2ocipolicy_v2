@@ -1,0 +1,644 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>OCI Network API Operations and Permissions</h2>
+    <p>This page details the specific API operations for OCI Networking services and the permissions required for each operation. Use this information to create precise OCI policies when migrating from AWS.</p>
+    
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Network API Operations Reference</h5>
+        </div>
+        <div class="card-body">
+            <p>In OCI, networking operations require specific permission strings that are more granular than AWS IAM actions. This reference helps you map AWS VPC, Route53, and other networking permissions to equivalent OCI networking permissions.</p>
+            
+            <h6 class="mt-3">OCI Network Resource Types</h6>
+            <p>OCI uses several resource types to manage networking resources:</p>
+            <ul>
+                <li><strong>virtual-network-family</strong> - An aggregate resource-type covering all VCN resources</li>
+                <li><strong>vcn</strong> - Virtual Cloud Network, the main networking container</li>
+                <li><strong>subnet</strong> - Subdivision of a VCN with its own security rules</li>
+                <li><strong>security-list</strong> - Security rules for resources in a subnet</li>
+                <li><strong>network-security-group</strong> - Security rules for specific resources</li>
+                <li><strong>internet-gateway</strong> - Gateway for internet access</li>
+                <li><strong>nat-gateway</strong> - Gateway for outbound-only internet access</li>
+                <li><strong>drg</strong> - Dynamic Routing Gateway for on-premises or VCN connectivity</li>
+                <li><strong>load-balancer</strong> - Load balancing for incoming traffic</li>
+                <li><strong>dns-zone</strong> - DNS zone for domain name resolution</li>
+            </ul>
+            
+            <div class="alert alert-info">
+                <strong>Important:</strong> Unlike AWS which often uses a single permission for operations, OCI typically requires multiple permissions spanning different resource types. For example, launching an instance with public internet access requires permissions for compute, network, and security resources.
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>VCN Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListVcns</td>
+                            <td>VIRTUAL_NETWORK_INSPECT</td>
+                            <td>ec2:DescribeVpcs</td>
+                            <td>Permission to list all VCNs in a compartment</td>
+                        </tr>
+                        <tr>
+                            <td>GetVcn</td>
+                            <td>VIRTUAL_NETWORK_INSPECT</td>
+                            <td>ec2:DescribeVpcs</td>
+                            <td>Permission to get information about a specific VCN</td>
+                        </tr>
+                        <tr>
+                            <td>CreateVcn</td>
+                            <td>VIRTUAL_NETWORK_CREATE</td>
+                            <td>ec2:CreateVpc</td>
+                            <td>Create a new Virtual Cloud Network</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateVcn</td>
+                            <td>VIRTUAL_NETWORK_UPDATE</td>
+                            <td>ec2:ModifyVpcAttribute</td>
+                            <td>Update a Virtual Cloud Network</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteVcn</td>
+                            <td>VIRTUAL_NETWORK_DELETE</td>
+                            <td>ec2:DeleteVpc</td>
+                            <td>Delete a Virtual Cloud Network</td>
+                        </tr>
+                        <tr>
+                            <td>ChangeVcnCompartment</td>
+                            <td>VIRTUAL_NETWORK_UPDATE</td>
+                            <td>N/A (AWS doesn't have compartments)</td>
+                            <td>Move a VCN to another compartment</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Subnet Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListSubnets</td>
+                            <td>VIRTUAL_NETWORK_INSPECT</td>
+                            <td>ec2:DescribeSubnets</td>
+                            <td>Permission to list all subnets in a compartment</td>
+                        </tr>
+                        <tr>
+                            <td>GetSubnet</td>
+                            <td>VIRTUAL_NETWORK_INSPECT</td>
+                            <td>ec2:DescribeSubnets</td>
+                            <td>Permission to get information about a specific subnet</td>
+                        </tr>
+                        <tr>
+                            <td>CreateSubnet</td>
+                            <td>VIRTUAL_NETWORK_CREATE</td>
+                            <td>ec2:CreateSubnet</td>
+                            <td>Create a new subnet in a VCN</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateSubnet</td>
+                            <td>VIRTUAL_NETWORK_UPDATE</td>
+                            <td>ec2:ModifySubnetAttribute</td>
+                            <td>Update a subnet</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteSubnet</td>
+                            <td>VIRTUAL_NETWORK_DELETE</td>
+                            <td>ec2:DeleteSubnet</td>
+                            <td>Delete a subnet</td>
+                        </tr>
+                        <tr>
+                            <td>ChangeSubnetCompartment</td>
+                            <td>VIRTUAL_NETWORK_UPDATE</td>
+                            <td>N/A (AWS doesn't have compartments)</td>
+                            <td>Move a subnet to another compartment</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Security List Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListSecurityLists</td>
+                            <td>VIRTUAL_NETWORK_INSPECT</td>
+                            <td>ec2:DescribeSecurityGroups</td>
+                            <td>Permission to list all security lists in a VCN</td>
+                        </tr>
+                        <tr>
+                            <td>GetSecurityList</td>
+                            <td>VIRTUAL_NETWORK_INSPECT</td>
+                            <td>ec2:DescribeSecurityGroups</td>
+                            <td>Permission to get information about a specific security list</td>
+                        </tr>
+                        <tr>
+                            <td>CreateSecurityList</td>
+                            <td>VIRTUAL_NETWORK_CREATE</td>
+                            <td>ec2:CreateSecurityGroup</td>
+                            <td>Create a new security list in a VCN</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateSecurityList</td>
+                            <td>VIRTUAL_NETWORK_UPDATE</td>
+                            <td>ec2:AuthorizeSecurityGroupIngress, ec2:AuthorizeSecurityGroupEgress</td>
+                            <td>Update a security list</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteSecurityList</td>
+                            <td>VIRTUAL_NETWORK_DELETE</td>
+                            <td>ec2:DeleteSecurityGroup</td>
+                            <td>Delete a security list</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Network Security Group Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListNetworkSecurityGroups</td>
+                            <td>VIRTUAL_NETWORK_INSPECT</td>
+                            <td>ec2:DescribeSecurityGroups</td>
+                            <td>Permission to list all NSGs in a VCN</td>
+                        </tr>
+                        <tr>
+                            <td>GetNetworkSecurityGroup</td>
+                            <td>VIRTUAL_NETWORK_INSPECT</td>
+                            <td>ec2:DescribeSecurityGroups</td>
+                            <td>Permission to get information about a specific NSG</td>
+                        </tr>
+                        <tr>
+                            <td>CreateNetworkSecurityGroup</td>
+                            <td>VIRTUAL_NETWORK_CREATE</td>
+                            <td>ec2:CreateSecurityGroup</td>
+                            <td>Create a new NSG in a VCN</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateNetworkSecurityGroup</td>
+                            <td>VIRTUAL_NETWORK_UPDATE</td>
+                            <td>ec2:ModifySecurityGroupRules</td>
+                            <td>Update an NSG</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteNetworkSecurityGroup</td>
+                            <td>VIRTUAL_NETWORK_DELETE</td>
+                            <td>ec2:DeleteSecurityGroup</td>
+                            <td>Delete an NSG</td>
+                        </tr>
+                        <tr>
+                            <td>AddNetworkSecurityGroupSecurityRules</td>
+                            <td>VIRTUAL_NETWORK_UPDATE</td>
+                            <td>ec2:AuthorizeSecurityGroupIngress, ec2:AuthorizeSecurityGroupEgress</td>
+                            <td>Add security rules to an NSG</td>
+                        </tr>
+                        <tr>
+                            <td>RemoveNetworkSecurityGroupSecurityRules</td>
+                            <td>VIRTUAL_NETWORK_UPDATE</td>
+                            <td>ec2:RevokeSecurityGroupIngress, ec2:RevokeSecurityGroupEgress</td>
+                            <td>Remove security rules from an NSG</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Gateway Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CreateInternetGateway</td>
+                            <td>VIRTUAL_NETWORK_CREATE</td>
+                            <td>ec2:CreateInternetGateway</td>
+                            <td>Create an internet gateway in a VCN</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateInternetGateway</td>
+                            <td>VIRTUAL_NETWORK_UPDATE</td>
+                            <td>ec2:ModifyVpcEndpoint</td>
+                            <td>Update an internet gateway</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteInternetGateway</td>
+                            <td>VIRTUAL_NETWORK_DELETE</td>
+                            <td>ec2:DeleteInternetGateway</td>
+                            <td>Delete an internet gateway</td>
+                        </tr>
+                        <tr>
+                            <td>CreateNatGateway</td>
+                            <td>VIRTUAL_NETWORK_CREATE</td>
+                            <td>ec2:CreateNatGateway</td>
+                            <td>Create a NAT gateway in a VCN</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateNatGateway</td>
+                            <td>VIRTUAL_NETWORK_UPDATE</td>
+                            <td>N/A (AWS doesn't allow updating NAT gateways)</td>
+                            <td>Update a NAT gateway</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteNatGateway</td>
+                            <td>VIRTUAL_NETWORK_DELETE</td>
+                            <td>ec2:DeleteNatGateway</td>
+                            <td>Delete a NAT gateway</td>
+                        </tr>
+                        <tr>
+                            <td>CreateDrg</td>
+                            <td>VIRTUAL_NETWORK_CREATE</td>
+                            <td>ec2:CreateVpnGateway (similar function)</td>
+                            <td>Create a Dynamic Routing Gateway</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteDrg</td>
+                            <td>VIRTUAL_NETWORK_DELETE</td>
+                            <td>ec2:DeleteVpnGateway (similar function)</td>
+                            <td>Delete a Dynamic Routing Gateway</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Load Balancer Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CreateLoadBalancer</td>
+                            <td>LOAD_BALANCER_CREATE</td>
+                            <td>elasticloadbalancing:CreateLoadBalancer</td>
+                            <td>Create a load balancer</td>
+                        </tr>
+                        <tr>
+                            <td>GetLoadBalancer</td>
+                            <td>LOAD_BALANCER_INSPECT</td>
+                            <td>elasticloadbalancing:DescribeLoadBalancers</td>
+                            <td>Get information about a load balancer</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateLoadBalancer</td>
+                            <td>LOAD_BALANCER_UPDATE</td>
+                            <td>elasticloadbalancing:ModifyLoadBalancerAttributes</td>
+                            <td>Update a load balancer</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteLoadBalancer</td>
+                            <td>LOAD_BALANCER_DELETE</td>
+                            <td>elasticloadbalancing:DeleteLoadBalancer</td>
+                            <td>Delete a load balancer</td>
+                        </tr>
+                        <tr>
+                            <td>CreateBackendSet</td>
+                            <td>LOAD_BALANCER_UPDATE</td>
+                            <td>elasticloadbalancing:CreateTargetGroup</td>
+                            <td>Create a backend set for a load balancer</td>
+                        </tr>
+                        <tr>
+                            <td>CreateListener</td>
+                            <td>LOAD_BALANCER_UPDATE</td>
+                            <td>elasticloadbalancing:CreateListener</td>
+                            <td>Create a listener for a load balancer</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>DNS Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CreateZone</td>
+                            <td>DNS_ZONE_CREATE</td>
+                            <td>route53:CreateHostedZone</td>
+                            <td>Create a DNS zone</td>
+                        </tr>
+                        <tr>
+                            <td>GetZone</td>
+                            <td>DNS_ZONE_INSPECT</td>
+                            <td>route53:GetHostedZone</td>
+                            <td>Get information about a DNS zone</td>
+                        </tr>
+                        <tr>
+                            <td>ListZones</td>
+                            <td>DNS_ZONE_INSPECT</td>
+                            <td>route53:ListHostedZones</td>
+                            <td>List DNS zones</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateZone</td>
+                            <td>DNS_ZONE_UPDATE</td>
+                            <td>route53:UpdateHostedZoneComment</td>
+                            <td>Update a DNS zone</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteZone</td>
+                            <td>DNS_ZONE_DELETE</td>
+                            <td>route53:DeleteHostedZone</td>
+                            <td>Delete a DNS zone</td>
+                        </tr>
+                        <tr>
+                            <td>CreateRecord</td>
+                            <td>DNS_RECORD_CREATE</td>
+                            <td>route53:ChangeResourceRecordSets</td>
+                            <td>Create a DNS record</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateRecord</td>
+                            <td>DNS_RECORD_UPDATE</td>
+                            <td>route53:ChangeResourceRecordSets</td>
+                            <td>Update a DNS record</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteRecord</td>
+                            <td>DNS_RECORD_DELETE</td>
+                            <td>route53:ChangeResourceRecordSets</td>
+                            <td>Delete a DNS record</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Creating AWS-to-OCI Network Policies</h5>
+        </div>
+        <div class="card-body">
+            <h6>Example: AWS Network Administrator Policy</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:CreateVpc",
+        "ec2:DeleteVpc",
+        "ec2:CreateSubnet",
+        "ec2:DeleteSubnet",
+        "ec2:CreateInternetGateway",
+        "ec2:DeleteInternetGateway",
+        "ec2:CreateSecurityGroup",
+        "ec2:DeleteSecurityGroup",
+        "ec2:AuthorizeSecurityGroupIngress",
+        "ec2:AuthorizeSecurityGroupEgress"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group NetworkAdmins to manage virtual-network-family in compartment MyCompartment
+Allow group NetworkAdmins to manage load-balancers in compartment MyCompartment
+Allow group NetworkAdmins to manage dns in compartment MyCompartment</pre>
+
+            <h6 class="mt-4">Example: AWS Read-Only Network Access</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeVpcs",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeInternetGateways"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group NetworkReaders to inspect virtual-network-family in compartment MyCompartment
+Allow group NetworkReaders to inspect load-balancers in compartment MyCompartment
+Allow group NetworkReaders to inspect dns in compartment MyCompartment</pre>
+
+            <h6 class="mt-4">Example: Network Security Group Manager</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeSecurityGroups",
+        "ec2:CreateSecurityGroup",
+        "ec2:DeleteSecurityGroup",
+        "ec2:AuthorizeSecurityGroupIngress",
+        "ec2:AuthorizeSecurityGroupEgress",
+        "ec2:RevokeSecurityGroupIngress",
+        "ec2:RevokeSecurityGroupEgress"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group SecurityGroupManagers to inspect virtual-network-family in compartment MyCompartment
+Allow group SecurityGroupManagers to manage security-lists in compartment MyCompartment
+Allow group SecurityGroupManagers to manage network-security-groups in compartment MyCompartment</pre>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Understanding OCI Network Permission Strings</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>OCI Permission String</th>
+                            <th>Description</th>
+                            <th>Used For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>VIRTUAL_NETWORK_INSPECT</td>
+                            <td>View networking resources metadata</td>
+                            <td>List and describe VCNs, subnets, security lists, etc.</td>
+                        </tr>
+                        <tr>
+                            <td>VIRTUAL_NETWORK_CREATE</td>
+                            <td>Create networking resources</td>
+                            <td>Create VCNs, subnets, security lists, etc.</td>
+                        </tr>
+                        <tr>
+                            <td>VIRTUAL_NETWORK_UPDATE</td>
+                            <td>Modify existing networking resources</td>
+                            <td>Update VCN configurations, security rules, etc.</td>
+                        </tr>
+                        <tr>
+                            <td>VIRTUAL_NETWORK_DELETE</td>
+                            <td>Delete networking resources</td>
+                            <td>Delete VCNs, subnets, security lists, etc.</td>
+                        </tr>
+                        <tr>
+                            <td>LOAD_BALANCER_INSPECT</td>
+                            <td>View load balancer metadata</td>
+                            <td>List and describe load balancers</td>
+                        </tr>
+                        <tr>
+                            <td>LOAD_BALANCER_CREATE</td>
+                            <td>Create load balancers</td>
+                            <td>Create new load balancers</td>
+                        </tr>
+                        <tr>
+                            <td>LOAD_BALANCER_UPDATE</td>
+                            <td>Modify existing load balancers</td>
+                            <td>Update load balancer configurations</td>
+                        </tr>
+                        <tr>
+                            <td>LOAD_BALANCER_DELETE</td>
+                            <td>Delete load balancers</td>
+                            <td>Delete load balancers</td>
+                        </tr>
+                        <tr>
+                            <td>DNS_ZONE_INSPECT</td>
+                            <td>View DNS zone metadata</td>
+                            <td>List and describe DNS zones</td>
+                        </tr>
+                        <tr>
+                            <td>DNS_ZONE_CREATE</td>
+                            <td>Create DNS zones</td>
+                            <td>Create new DNS zones</td>
+                        </tr>
+                        <tr>
+                            <td>DNS_ZONE_UPDATE</td>
+                            <td>Modify existing DNS zones</td>
+                            <td>Update DNS zone configurations</td>
+                        </tr>
+                        <tr>
+                            <td>DNS_ZONE_DELETE</td>
+                            <td>Delete DNS zones</td>
+                            <td>Delete DNS zones</td>
+                        </tr>
+                        <tr>
+                            <td>DNS_RECORD_CREATE</td>
+                            <td>Create DNS records</td>
+                            <td>Create new DNS records</td>
+                        </tr>
+                        <tr>
+                            <td>DNS_RECORD_UPDATE</td>
+                            <td>Modify existing DNS records</td>
+                            <td>Update DNS record configurations</td>
+                        </tr>
+                        <tr>
+                            <td>DNS_RECORD_DELETE</td>
+                            <td>Delete DNS records</td>
+                            <td>Delete DNS records</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

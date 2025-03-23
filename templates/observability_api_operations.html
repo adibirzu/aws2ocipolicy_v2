@@ -1,0 +1,510 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>OCI Observability API Operations and Permissions</h2>
+    <p>This page details the specific API operations for OCI Observability services and the permissions required for each operation. Use this information to create precise OCI policies when migrating from AWS.</p>
+    
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Observability API Operations Reference</h5>
+        </div>
+        <div class="card-body">
+            <p>In OCI, observability operations require specific permission strings for monitoring, logging, and other telemetry services. This reference helps you map AWS CloudWatch, CloudTrail, and X-Ray permissions to equivalent OCI observability permissions.</p>
+            
+            <div class="alert alert-info">
+                <strong>Source Documentation:</strong> This information is based on the <a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/monitoringpolicyreference.htm" target="_blank">OCI Monitoring Policy Reference</a>, <a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/loggingpolicyreference.htm" target="_blank">OCI Logging Policy Reference</a>, and <a href="https://docs.oracle.com/en-us/iaas/application-performance-monitoring/doc/application-performance-monitoring-permissions.html" target="_blank">OCI APM Permissions Reference</a>.
+            </div>
+            
+            <h6 class="mt-3">OCI Observability Resource Types</h6>
+            <p>OCI uses several resource types to manage observability resources:</p>
+            <ul>
+                <li><strong>alarm</strong> - Monitoring alerts based on metric conditions</li>
+                <li><strong>metrics</strong> - Time-series data collected from resources</li>
+                <li><strong>log-group</strong> - A container for organizing logs</li>
+                <li><strong>log</strong> - Log data collected from resources</li>
+                <li><strong>apm-domain</strong> - Container for APM traces and monitoring</li>
+                <li><strong>apm-synthetics</strong> - Synthetic monitoring for applications</li>
+                <li><strong>logging-analytics</strong> - Advanced log analytics and processing</li>
+                <li><strong>logging-analytics-entity</strong> - Resources managed by logging analytics</li>
+                <li><strong>logging-analytics-log-group</strong> - Log groups for logging analytics</li>
+                <li><strong>logging-analytics-source</strong> - Sources of logs for logging analytics</li>
+                <li><strong>logging-analytics-namespace</strong> - Organizational unit for logging analytics</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Monitoring Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListMetrics</td>
+                            <td>METRIC_INSPECT</td>
+                            <td>cloudwatch:ListMetrics</td>
+                            <td>Permission to list available metrics</td>
+                        </tr>
+                        <tr>
+                            <td>SummarizeMetricsData</td>
+                            <td>METRIC_READ</td>
+                            <td>cloudwatch:GetMetricData</td>
+                            <td>Permission to read metric data</td>
+                        </tr>
+                        <tr>
+                            <td>PostMetricData</td>
+                            <td>METRIC_EMIT</td>
+                            <td>cloudwatch:PutMetricData</td>
+                            <td>Permission to publish metric data</td>
+                        </tr>
+                        <tr>
+                            <td>ListAlarms</td>
+                            <td>ALARM_INSPECT</td>
+                            <td>cloudwatch:DescribeAlarms</td>
+                            <td>Permission to list alarms</td>
+                        </tr>
+                        <tr>
+                            <td>GetAlarm</td>
+                            <td>ALARM_INSPECT</td>
+                            <td>cloudwatch:DescribeAlarms</td>
+                            <td>Permission to get information about an alarm</td>
+                        </tr>
+                        <tr>
+                            <td>CreateAlarm</td>
+                            <td>ALARM_CREATE</td>
+                            <td>cloudwatch:PutMetricAlarm</td>
+                            <td>Permission to create an alarm</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateAlarm</td>
+                            <td>ALARM_UPDATE</td>
+                            <td>cloudwatch:PutMetricAlarm</td>
+                            <td>Permission to update an alarm</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteAlarm</td>
+                            <td>ALARM_DELETE</td>
+                            <td>cloudwatch:DeleteAlarms</td>
+                            <td>Permission to delete an alarm</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Logging Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListLogGroups</td>
+                            <td>LOG_GROUP_INSPECT</td>
+                            <td>logs:DescribeLogGroups</td>
+                            <td>Permission to list log groups</td>
+                        </tr>
+                        <tr>
+                            <td>GetLogGroup</td>
+                            <td>LOG_GROUP_INSPECT</td>
+                            <td>logs:DescribeLogGroups</td>
+                            <td>Permission to get information about a log group</td>
+                        </tr>
+                        <tr>
+                            <td>CreateLogGroup</td>
+                            <td>LOG_GROUP_CREATE</td>
+                            <td>logs:CreateLogGroup</td>
+                            <td>Permission to create a log group</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateLogGroup</td>
+                            <td>LOG_GROUP_UPDATE</td>
+                            <td>logs:PutRetentionPolicy</td>
+                            <td>Permission to update a log group</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteLogGroup</td>
+                            <td>LOG_GROUP_DELETE</td>
+                            <td>logs:DeleteLogGroup</td>
+                            <td>Permission to delete a log group</td>
+                        </tr>
+                        <tr>
+                            <td>ListLogs</td>
+                            <td>LOG_INSPECT</td>
+                            <td>logs:DescribeLogStreams</td>
+                            <td>Permission to list logs</td>
+                        </tr>
+                        <tr>
+                            <td>GetLog</td>
+                            <td>LOG_INSPECT</td>
+                            <td>logs:DescribeLogStreams</td>
+                            <td>Permission to get information about a log</td>
+                        </tr>
+                        <tr>
+                            <td>CreateLog</td>
+                            <td>LOG_CREATE</td>
+                            <td>logs:CreateLogStream</td>
+                            <td>Permission to create a log</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateLog</td>
+                            <td>LOG_UPDATE</td>
+                            <td>logs:PutLogEvents</td>
+                            <td>Permission to update a log</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteLog</td>
+                            <td>LOG_DELETE</td>
+                            <td>logs:DeleteLogStream</td>
+                            <td>Permission to delete a log</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Application Performance Monitoring (APM) Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListApmDomains</td>
+                            <td>APM_DOMAIN_INSPECT</td>
+                            <td>xray:GetGroups</td>
+                            <td>Permission to list APM domains</td>
+                        </tr>
+                        <tr>
+                            <td>GetApmDomain</td>
+                            <td>APM_DOMAIN_INSPECT</td>
+                            <td>xray:GetGroup</td>
+                            <td>Permission to get information about an APM domain</td>
+                        </tr>
+                        <tr>
+                            <td>CreateApmDomain</td>
+                            <td>APM_DOMAIN_CREATE</td>
+                            <td>xray:CreateGroup</td>
+                            <td>Permission to create an APM domain</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateApmDomain</td>
+                            <td>APM_DOMAIN_UPDATE</td>
+                            <td>xray:UpdateGroup</td>
+                            <td>Permission to update an APM domain</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteApmDomain</td>
+                            <td>APM_DOMAIN_DELETE</td>
+                            <td>xray:DeleteGroup</td>
+                            <td>Permission to delete an APM domain</td>
+                        </tr>
+                        <tr>
+                            <td>QueryData</td>
+                            <td>APM_DOMAIN_READ</td>
+                            <td>xray:GetTraceSummaries</td>
+                            <td>Permission to query APM data</td>
+                        </tr>
+                        <tr>
+                            <td>ListSyntheticsMonitors</td>
+                            <td>APM_SYNTHETICS_INSPECT</td>
+                            <td>synthetics:DescribeCanaries</td>
+                            <td>Permission to list synthetic monitors</td>
+                        </tr>
+                        <tr>
+                            <td>CreateSyntheticsMonitor</td>
+                            <td>APM_SYNTHETICS_CREATE</td>
+                            <td>synthetics:CreateCanary</td>
+                            <td>Permission to create a synthetic monitor</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateSyntheticsMonitor</td>
+                            <td>APM_SYNTHETICS_UPDATE</td>
+                            <td>synthetics:UpdateCanary</td>
+                            <td>Permission to update a synthetic monitor</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteSyntheticsMonitor</td>
+                            <td>APM_SYNTHETICS_DELETE</td>
+                            <td>synthetics:DeleteCanary</td>
+                            <td>Permission to delete a synthetic monitor</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Logging Analytics Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListLogAnalyticsEntities</td>
+                            <td>LOGGING_ANALYTICS_ENTITY_INSPECT</td>
+                            <td>logs:DescribeLogGroups</td>
+                            <td>Permission to list log analytics entities</td>
+                        </tr>
+                        <tr>
+                            <td>CreateLogAnalyticsEntity</td>
+                            <td>LOGGING_ANALYTICS_ENTITY_CREATE</td>
+                            <td>logs:CreateLogGroup</td>
+                            <td>Permission to create a log analytics entity</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateLogAnalyticsEntity</td>
+                            <td>LOGGING_ANALYTICS_ENTITY_UPDATE</td>
+                            <td>logs:PutRetentionPolicy</td>
+                            <td>Permission to update a log analytics entity</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteLogAnalyticsEntity</td>
+                            <td>LOGGING_ANALYTICS_ENTITY_DELETE</td>
+                            <td>logs:DeleteLogGroup</td>
+                            <td>Permission to delete a log analytics entity</td>
+                        </tr>
+                        <tr>
+                            <td>ListLogAnalyticsSources</td>
+                            <td>LOGGING_ANALYTICS_SOURCE_INSPECT</td>
+                            <td>logs:DescribeLogStreams</td>
+                            <td>Permission to list log analytics sources</td>
+                        </tr>
+                        <tr>
+                            <td>CreateLogAnalyticsSource</td>
+                            <td>LOGGING_ANALYTICS_SOURCE_CREATE</td>
+                            <td>logs:CreateLogStream</td>
+                            <td>Permission to create a log analytics source</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateLogAnalyticsSource</td>
+                            <td>LOGGING_ANALYTICS_SOURCE_UPDATE</td>
+                            <td>logs:PutLogEvents</td>
+                            <td>Permission to update a log analytics source</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteLogAnalyticsSource</td>
+                            <td>LOGGING_ANALYTICS_SOURCE_DELETE</td>
+                            <td>logs:DeleteLogStream</td>
+                            <td>Permission to delete a log analytics source</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Creating AWS-to-OCI Observability Policies</h5>
+        </div>
+        <div class="card-body">
+            <h6>Example: AWS CloudWatch Administrator Policy</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group MonitoringAdmins to manage metrics in compartment MyCompartment
+Allow group MonitoringAdmins to manage alarms in compartment MyCompartment</pre>
+
+            <h6 class="mt-4">Example: AWS CloudWatch Logs Reader Policy</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:Describe*",
+        "logs:Get*",
+        "logs:List*",
+        "logs:StartQuery",
+        "logs:StopQuery",
+        "logs:TestMetricFilter",
+        "logs:FilterLogEvents"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group LogReaders to inspect log-groups in compartment MyCompartment
+Allow group LogReaders to inspect logs in compartment MyCompartment
+Allow group LogReaders to read log-content in compartment MyCompartment</pre>
+
+            <h6 class="mt-4">Example: AWS X-Ray Full Access Policy</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "xray:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group ApmAdmins to manage apm-domains in compartment MyCompartment
+Allow group ApmAdmins to manage apm-synthetics in compartment MyCompartment</pre>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Understanding OCI Observability Permission Strings</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>OCI Permission String</th>
+                            <th>Description</th>
+                            <th>Used For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>METRIC_INSPECT</td>
+                            <td>View metric metadata</td>
+                            <td>List and describe metrics</td>
+                        </tr>
+                        <tr>
+                            <td>METRIC_READ</td>
+                            <td>Read metric data</td>
+                            <td>Query and visualize metrics</td>
+                        </tr>
+                        <tr>
+                            <td>METRIC_EMIT</td>
+                            <td>Publish metric data</td>
+                            <td>Send custom metrics</td>
+                        </tr>
+                        <tr>
+                            <td>ALARM_INSPECT</td>
+                            <td>View alarm metadata</td>
+                            <td>List and describe alarms</td>
+                        </tr>
+                        <tr>
+                            <td>ALARM_CREATE</td>
+                            <td>Create alarms</td>
+                            <td>Create new alarms</td>
+                        </tr>
+                        <tr>
+                            <td>ALARM_UPDATE</td>
+                            <td>Modify alarms</td>
+                            <td>Update alarm configurations</td>
+                        </tr>
+                        <tr>
+                            <td>ALARM_DELETE</td>
+                            <td>Delete alarms</td>
+                            <td>Remove alarms</td>
+                        </tr>
+                        <tr>
+                            <td>LOG_GROUP_INSPECT</td>
+                            <td>View log group metadata</td>
+                            <td>List and describe log groups</td>
+                        </tr>
+                        <tr>
+                            <td>LOG_GROUP_CREATE</td>
+                            <td>Create log groups</td>
+                            <td>Create new log groups</td>
+                        </tr>
+                        <tr>
+                            <td>LOG_GROUP_UPDATE</td>
+                            <td>Modify log groups</td>
+                            <td>Update log group configurations</td>
+                        </tr>
+                        <tr>
+                            <td>LOG_GROUP_DELETE</td>
+                            <td>Delete log groups</td>
+                            <td>Remove log groups</td>
+                        </tr>
+                        <tr>
+                            <td>LOG_INSPECT</td>
+                            <td>View log metadata</td>
+                            <td>List and describe logs</td>
+                        </tr>
+                        <tr>
+                            <td>LOG_READ</td>
+                            <td>Read log content</td>
+                            <td>View log entries</td>
+                        </tr>
+                        <tr>
+                            <td>LOG_CREATE</td>
+                            <td>Create logs</td>
+                            <td>Create new logs</td>
+                        </tr>
+                        <tr>
+                            <td>LOG_UPDATE</td>
+                            <td>Modify logs</td>
+                            <td>Update log configurations</td>
+                        </tr>
+                        <tr>
+                            <td>LOG_DELETE</td>
+                            <td>Delete logs</td>
+                            <td>Remove logs</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

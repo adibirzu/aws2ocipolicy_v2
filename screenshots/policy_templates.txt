@@ -1,0 +1,45 @@
++-------------------------------------------------------+
+|                  OCI Policy Templates                 |
++-------------------------------------------------------+
+
+Select Template Type:
+[Compute Admin ▼]  [Apply Template]
+
+Group Name: ComputeAdmins
+
+Generated Policy Template:
++-----------------------------------------------------+
+| # Compute Administrator Policy Template             |
+| # Based on Oracle Common Policies documentation     |
+|                                                     |
+| # Instance and Compute Resource Management          |
+| Allow group ComputeAdmins to manage instance-family |
+| in tenancy                                          |
+| Allow group ComputeAdmins to manage cluster-family  |
+| in tenancy                                          |
+|                                                     |
+| # Storage Access for Compute Resources              |
+| Allow group ComputeAdmins to manage volume-family   |
+| in tenancy                                          |
+|                                                     |
+| # Network Access for Compute Resources              |
+| Allow group ComputeAdmins to manage                 |
+| virtual-network-family in tenancy                   |
+|                                                     |
+| # Load Balancer Access                              |
+| Allow group ComputeAdmins to manage load-balancers  |
+| in tenancy                                          |
+|                                                     |
+| # Image Management                                  |
+| Allow group ComputeAdmins to manage instance-images |
+| in tenancy                                          |
+|                                                     |
+| # Key and Secret Access                             |
+| Allow group ComputeAdmins to use secrets in tenancy |
+|                                                     |
+| # Certificate Access for TLS                        |
+| Allow group ComputeAdmins to read certificate-family|
+| in tenancy                                          |
++-----------------------------------------------------+
+
+[Copy to Clipboard]  [Save as File]  [Validate Policy]

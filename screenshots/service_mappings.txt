@@ -1,0 +1,35 @@
++-------------------------------------------------------+
+|                  AWS to OCI Service Mappings          |
++-------------------------------------------------------+
+
++-----------------------------------------------------+
+| AWS Service         | OCI Equivalent                |
+|--------------------|------------------------------ |
+| EC2                | Compute                        |
+| EBS                | Block Volume                   |
+| S3                 | Object Storage                 |
+| RDS                | Database                       |
+| DynamoDB           | NoSQL Database                 |
+| IAM                | Identity and Access Management |
+| VPC                | Virtual Cloud Network (VCN)    |
+| Lambda             | Functions                      |
+| ELB                | Load Balancer                  |
+| CloudWatch         | Monitoring                     |
+| CloudTrail         | Audit                          |
+| KMS                | Vault                          |
+| SNS                | Notifications                  |
+| SQS                | Queue                          |
+| EFS                | File Storage                   |
+| EKS/ECS            | Container Engine for Kubernetes|
+| ECR                | Container Registry             |
+| Route 53           | DNS                            |
+| CloudFront         | CDN                            |
+| ElastiCache        | Cache                          |
+| MSK                | Streaming                      |
++-----------------------------------------------------+
+
+Note: This table is maintained based on the official 
+Oracle documentation for OCI services and AWS equivalents.
+Updates are provided as new services are added or mappings change.
+
+[Export Mappings as CSV]

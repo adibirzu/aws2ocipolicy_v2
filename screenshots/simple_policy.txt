@@ -1,0 +1,33 @@
++-------------------------------------------------------+
+|                 Simple Policy Translation             |
++-------------------------------------------------------+
+
+AWS IAM Policy:
++-----------------------------------------------------+
+| {                                                   |
+|   "Version": "2012-10-17",                          |
+|   "Statement": [{                                   |
+|     "Effect": "Allow",                              |
+|     "Action": ["ec2:*"],                            |
+|     "Resource": ["*"]                               |
+|   }]                                                |
+| }                                                   |
++-----------------------------------------------------+
+
+OCI Group Name: ComputeAdmins
+
+[Translate Policy]
+
+Translated OCI Policy:
++-----------------------------------------------------+
+| Allow group ComputeAdmins to manage instance-family |
+| in tenancy                                          |
+|                                                     |
+| Allow group ComputeAdmins to manage volume-family   |
+| in tenancy                                          |
+|                                                     |
+| Allow group ComputeAdmins to manage                 |
+| virtual-network-family in tenancy                   |
++-----------------------------------------------------+
+
+[  Save Policy  ]  [  Copy to Clipboard  ]

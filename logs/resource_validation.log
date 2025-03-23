@@ -1,0 +1,76 @@
+2025-03-21 09:41:15,698 - INFO - Invalid resource detected: 'backup-storage'
+2025-03-21 09:41:15,699 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-21T09:41:15.698943", "invalid_resource": "backup-storage", "service": null, "additional_info": {}}
+2025-03-21 09:41:15,699 - INFO - Invalid resource detected: 'compute instances' for service 'compute'
+2025-03-21 09:41:15,699 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-21T09:41:15.699239", "invalid_resource": "compute instances", "service": "compute", "additional_info": {"resource_type": "instances"}}
+2025-03-21 09:41:15,699 - INFO - Invalid resource detected: 'tag'
+2025-03-21 09:41:15,699 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-21T09:41:15.699408", "invalid_resource": "tag", "service": null, "additional_info": {}}
+2025-03-21 09:41:15,699 - INFO - Invalid resource detected: 'vault key' for service 'vault'
+2025-03-21 09:41:15,699 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-21T09:41:15.699532", "invalid_resource": "vault key", "service": "vault", "additional_info": {"resource_type": "key"}}
+2025-03-21 09:41:15,699 - INFO - Invalid resource detected: 'disaster-recovery'
+2025-03-21 09:41:15,699 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-21T09:41:15.699649", "invalid_resource": "disaster-recovery", "service": null, "additional_info": {}}
+2025-03-21 09:41:15,699 - INFO - Invalid resource detected: 'identity users' for service 'identity'
+2025-03-21 09:41:15,699 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-21T09:41:15.699758", "invalid_resource": "identity users", "service": "identity", "additional_info": {"resource_type": "users"}}
+2025-03-21 09:41:15,699 - INFO - Invalid resource detected: 'file-storage file-systems' for service 'file-storage'
+2025-03-21 09:41:15,699 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-21T09:41:15.699871", "invalid_resource": "file-storage file-systems", "service": "file-storage", "additional_info": {"resource_type": "file-systems"}}
+2025-03-23 11:17:24,341 - INFO - Invalid resource detected: 'objects'
+2025-03-23 11:17:24,342 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T11:17:24.341506", "invalid_resource": "objects", "service": null, "additional_info": {}}
+2025-03-23 11:17:24,342 - INFO - Invalid resource detected: 'buckets'
+2025-03-23 11:17:24,342 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T11:17:24.342164", "invalid_resource": "buckets", "service": null, "additional_info": {}}
+2025-03-23 11:17:24,342 - INFO - Invalid resource detected: 'objects'
+2025-03-23 11:17:24,342 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T11:17:24.342329", "invalid_resource": "objects", "service": null, "additional_info": {}}
+2025-03-23 11:17:24,342 - INFO - Invalid resource detected: 'buckets'
+2025-03-23 11:17:24,342 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T11:17:24.342425", "invalid_resource": "buckets", "service": null, "additional_info": {}}
+2025-03-23 11:54:51,077 - INFO - Invalid resource detected: 'compartments'
+2025-03-23 11:54:51,077 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T11:54:51.077602", "invalid_resource": "compartments", "service": null, "additional_info": {}}
+2025-03-23 11:54:51,077 - INFO - Invalid resource detected: 'instance-family'
+2025-03-23 11:54:51,078 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T11:54:51.077982", "invalid_resource": "instance-family", "service": null, "additional_info": {}}
+2025-03-23 11:54:51,078 - INFO - Invalid resource detected: 'volume-family'
+2025-03-23 11:54:51,078 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T11:54:51.078074", "invalid_resource": "volume-family", "service": null, "additional_info": {}}
+2025-03-23 11:54:51,078 - INFO - Invalid resource detected: 'virtual-network-family'
+2025-03-23 11:54:51,078 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T11:54:51.078149", "invalid_resource": "virtual-network-family", "service": null, "additional_info": {}}
+2025-03-23 12:11:36,155 - INFO - Invalid resource detected: 'vault'
+2025-03-23 12:11:36,155 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T12:11:36.155370", "invalid_resource": "vault", "service": null, "additional_info": {}}
+2025-03-23 12:11:36,155 - INFO - Invalid resource detected: 'acm-pca'
+2025-03-23 12:11:36,155 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T12:11:36.155866", "invalid_resource": "acm-pca", "service": null, "additional_info": {}}
+2025-03-23 12:11:36,155 - INFO - Invalid resource detected: 'vault'
+2025-03-23 12:11:36,156 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T12:11:36.155988", "invalid_resource": "vault", "service": null, "additional_info": {}}
+2025-03-23 12:11:36,156 - INFO - Invalid resource detected: 'acm-pca'
+2025-03-23 12:11:36,156 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T12:11:36.156091", "invalid_resource": "acm-pca", "service": null, "additional_info": {}}
+2025-03-23 12:16:07,836 - INFO - Invalid resource detected: 'acm-pca'
+2025-03-23 12:16:07,837 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T12:16:07.836864", "invalid_resource": "acm-pca", "service": null, "additional_info": {}}
+2025-03-23 19:55:14,049 - INFO - Invalid resource detected: 'instance-images'
+2025-03-23 19:55:14,049 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T19:55:14.049055", "invalid_resource": "instance-images", "service": null, "additional_info": {}}
+2025-03-23 19:55:14,049 - INFO - Invalid resource detected: 'bastion-family'
+2025-03-23 19:55:14,049 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T19:55:14.049811", "invalid_resource": "bastion-family", "service": null, "additional_info": {}}
+2025-03-23 19:55:14,049 - INFO - Invalid resource detected: 'logging-family'
+2025-03-23 19:55:14,049 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T19:55:14.049860", "invalid_resource": "logging-family", "service": null, "additional_info": {}}
+2025-03-23 19:55:14,049 - INFO - Invalid resource detected: 'cloud-guard-family'
+2025-03-23 19:55:14,049 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T19:55:14.049890", "invalid_resource": "cloud-guard-family", "service": null, "additional_info": {}}
+2025-03-23 19:55:14,049 - INFO - Invalid resource detected: 'dns'
+2025-03-23 19:55:14,049 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T19:55:14.049959", "invalid_resource": "dns", "service": null, "additional_info": {}}
+2025-03-23 19:55:14,050 - INFO - Invalid resource detected: 'backup-family'
+2025-03-23 19:55:14,050 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T19:55:14.050132", "invalid_resource": "backup-family", "service": null, "additional_info": {}}
+2025-03-23 19:55:14,050 - INFO - Invalid resource detected: 'identity-domain'
+2025-03-23 19:55:14,050 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T19:55:14.050207", "invalid_resource": "identity-domain", "service": null, "additional_info": {}}
+2025-03-23 19:55:14,050 - INFO - Invalid resource detected: 'identity-provider'
+2025-03-23 19:55:14,050 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T19:55:14.050251", "invalid_resource": "identity-provider", "service": null, "additional_info": {}}
+2025-03-23 19:55:14,050 - INFO - Invalid resource detected: 'authentication-policies'
+2025-03-23 19:55:14,050 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T19:55:14.050303", "invalid_resource": "authentication-policies", "service": null, "additional_info": {}}
+2025-03-23 19:55:14,050 - INFO - Invalid resource detected: 'network-sources'
+2025-03-23 19:55:14,050 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T19:55:14.050372", "invalid_resource": "network-sources", "service": null, "additional_info": {}}
+2025-03-23 20:03:52,754 - INFO - Invalid resource detected: 'budgets'
+2025-03-23 20:03:52,755 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T20:03:52.754806", "invalid_resource": "budgets", "service": null, "additional_info": {}}
+2025-03-23 20:03:52,755 - INFO - Invalid resource detected: 'usage-budgets'
+2025-03-23 20:03:52,755 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T20:03:52.755395", "invalid_resource": "usage-budgets", "service": null, "additional_info": {}}
+2025-03-23 20:03:52,755 - INFO - Invalid resource detected: 'usage-reports'
+2025-03-23 20:03:52,755 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T20:03:52.755581", "invalid_resource": "usage-reports", "service": null, "additional_info": {}}
+2025-03-23 20:03:52,755 - INFO - Invalid resource detected: 'devops-family'
+2025-03-23 20:03:52,755 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T20:03:52.755749", "invalid_resource": "devops-family", "service": null, "additional_info": {}}
+2025-03-23 20:03:52,755 - INFO - Invalid resource detected: 'repos'
+2025-03-23 20:03:52,755 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T20:03:52.755824", "invalid_resource": "repos", "service": null, "additional_info": {}}
+2025-03-23 20:03:52,755 - INFO - Invalid resource detected: 'functions-family'
+2025-03-23 20:03:52,755 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T20:03:52.755873", "invalid_resource": "functions-family", "service": null, "additional_info": {}}
+2025-03-23 20:03:52,755 - INFO - Invalid resource detected: 'container-instances'
+2025-03-23 20:03:52,755 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T20:03:52.755933", "invalid_resource": "container-instances", "service": null, "additional_info": {}}
+2025-03-23 20:03:52,756 - INFO - Invalid resource detected: 'artifacts'
+2025-03-23 20:03:52,756 - INFO - STRUCTURED_DATA: {"timestamp": "2025-03-23T20:03:52.756008", "invalid_resource": "artifacts", "service": null, "additional_info": {}}

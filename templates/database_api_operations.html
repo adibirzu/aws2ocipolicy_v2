@@ -1,0 +1,589 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>OCI Database API Operations and Permissions</h2>
+    <p>This page details the specific API operations for OCI Database services and the permissions required for each operation. Use this information to create precise OCI policies when migrating from AWS.</p>
+    
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Database API Operations Reference</h5>
+        </div>
+        <div class="card-body">
+            <p>In OCI, database operations require specific permission strings that are more granular than AWS IAM actions. This reference helps you map AWS RDS permissions to equivalent OCI Database permissions.</p>
+            
+            <h6 class="mt-3">OCI Database Resource Types</h6>
+            <p>OCI uses several resource types to manage database resources:</p>
+            <ul>
+                <li><strong>database-family</strong> - An aggregate resource-type covering all database resources</li>
+                <li><strong>db-systems</strong> - The compute and storage resources for a database</li>
+                <li><strong>db-nodes</strong> - Individual compute resources within a database system</li>
+                <li><strong>db-homes</strong> - The software installation and database configuration</li>
+                <li><strong>databases</strong> - Database instances</li>
+                <li><strong>pluggable databases</strong> - Individual pluggable databases within a container database</li>
+                <li><strong>db-backups</strong> - Backup resources for databases</li>
+            </ul>
+            
+            <div class="alert alert-info">
+                <strong>Important:</strong> Unlike AWS which often uses a single permission for operations, OCI typically requires multiple permissions spanning different resource types. For example, launching a DB system requires permissions for compute, network, database, and potentially backup resources.
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Database System Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListDbSystems</td>
+                            <td>DB_SYSTEM_INSPECT</td>
+                            <td>rds:DescribeDBInstances</td>
+                            <td>Permission to list all database systems in a compartment</td>
+                        </tr>
+                        <tr>
+                            <td>GetDbSystem</td>
+                            <td>DB_SYSTEM_INSPECT</td>
+                            <td>rds:DescribeDBInstances</td>
+                            <td>Permission to get information about a specific database system</td>
+                        </tr>
+                        <tr>
+                            <td>LaunchDbSystem</td>
+                            <td>DB_SYSTEM_CREATE and DB_HOME_CREATE and DATABASE_CREATE and VNIC_CREATE and VNIC_ATTACH and SUBNET_ATTACH<br><br>To enable automatic backups for the initial database, also need DB_BACKUP_CREATE and DATABASE_CONTENT_READ</td>
+                            <td>rds:CreateDBInstance</td>
+                            <td>Unlike AWS which uses a single permission, OCI requires multiple permissions for network, database, and backup components</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateDbSystem</td>
+                            <td>DB_SYSTEM_INSPECT and DB_SYSTEM_UPDATE</td>
+                            <td>rds:ModifyDBInstance</td>
+                            <td>OCI requires the inspection permission in addition to the update permission</td>
+                        </tr>
+                        <tr>
+                            <td>ChangeDbSystemCompartment</td>
+                            <td>DB_SYSTEM_UPDATE and DB_HOME_UPDATE and DATABASE_UPDATE and DB_BACKUP_INSPECT</td>
+                            <td>N/A (AWS doesn't have a direct equivalent)</td>
+                            <td>Moving resources between compartments requires update permissions on all related resources</td>
+                        </tr>
+                        <tr>
+                            <td>ListDbSystemPatches</td>
+                            <td>DB_SYSTEM_INSPECT</td>
+                            <td>rds:DescribeDBEngineVersions</td>
+                            <td>Permission to list available patches for a database system</td>
+                        </tr>
+                        <tr>
+                            <td>ListDbSystemPatchHistoryEntries</td>
+                            <td>DB_SYSTEM_INSPECT</td>
+                            <td>N/A (AWS handles patching differently)</td>
+                            <td>View history of patches applied to a database system</td>
+                        </tr>
+                        <tr>
+                            <td>GetDbSystemPatch</td>
+                            <td>DB_SYSTEM_INSPECT</td>
+                            <td>rds:DescribeDBEngineVersions</td>
+                            <td>Get details about a specific database patch</td>
+                        </tr>
+                        <tr>
+                            <td>GetDbSystemPatchHistoryEntry</td>
+                            <td>DB_SYSTEM_INSPECT</td>
+                            <td>N/A (AWS handles patching differently)</td>
+                            <td>Get details about a specific patch history entry</td>
+                        </tr>
+                        <tr>
+                            <td>TerminateDbSystem</td>
+                            <td>DB_SYSTEM_DELETE and DB_HOME_DELETE and DATABASE_DELETE and VNIC_DETACH and VNIC_DELETE and SUBNET_DETACH<br><br>If automatic backups are enabled for any database in the DB System, also need DB_BACKUP_DELETE</td>
+                            <td>rds:DeleteDBInstance</td>
+                            <td>Requires separate permissions for all associated components</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Database Home Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListDbHomes</td>
+                            <td>DB_HOME_INSPECT</td>
+                            <td>N/A (AWS doesn't have this concept)</td>
+                            <td>Permission to list all database homes in a compartment</td>
+                        </tr>
+                        <tr>
+                            <td>GetDbHome</td>
+                            <td>DB_HOME_INSPECT</td>
+                            <td>N/A (AWS doesn't have this concept)</td>
+                            <td>Permission to get information about a specific database home</td>
+                        </tr>
+                        <tr>
+                            <td>CreateDbHome</td>
+                            <td>DB_HOME_CREATE and DATABASE_CREATE<br><br>To enable automatic backups for the initial database, also need DB_BACKUP_CREATE and DATABASE_CONTENT_READ</td>
+                            <td>Partially similar to rds:CreateDBInstance</td>
+                            <td>Create a new database home in an existing DB system</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateDbHome</td>
+                            <td>DB_HOME_INSPECT and DB_HOME_UPDATE</td>
+                            <td>Partially similar to rds:ModifyDBInstance</td>
+                            <td>Update a database home</td>
+                        </tr>
+                        <tr>
+                            <td>ChangeDbHomeCompartment</td>
+                            <td>DB_HOME_UPDATE and DATABASE_UPDATE and DB_BACKUP_INSPECT</td>
+                            <td>N/A (AWS doesn't have compartments)</td>
+                            <td>Move a database home to another compartment</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteDbHome</td>
+                            <td>DB_HOME_DELETE and DATABASE_DELETE<br><br>If automatic backups are enabled for any database in the DB Home, also need DB_BACKUP_DELETE</td>
+                            <td>Partially similar to rds:DeleteDBInstance</td>
+                            <td>Delete a database home</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Database Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListDatabases</td>
+                            <td>DATABASE_INSPECT</td>
+                            <td>rds:DescribeDBInstances</td>
+                            <td>Permission to list all databases in a compartment</td>
+                        </tr>
+                        <tr>
+                            <td>GetDatabase</td>
+                            <td>DATABASE_INSPECT</td>
+                            <td>rds:DescribeDBInstances</td>
+                            <td>Permission to get information about a specific database</td>
+                        </tr>
+                        <tr>
+                            <td>CreateDatabase</td>
+                            <td>DATABASE_CREATE<br><br>To enable automatic backups, also need DB_BACKUP_CREATE and DATABASE_CONTENT_READ</td>
+                            <td>rds:CreateDBInstance</td>
+                            <td>Create a new database in an existing DB Home</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateDatabase</td>
+                            <td>DATABASE_UPDATE</td>
+                            <td>rds:ModifyDBInstance</td>
+                            <td>Update a database</td>
+                        </tr>
+                        <tr>
+                            <td>ChangeDatabaseCompartment</td>
+                            <td>DATABASE_UPDATE and DB_BACKUP_INSPECT</td>
+                            <td>N/A (AWS doesn't have compartments)</td>
+                            <td>Move a database to another compartment</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteDatabase</td>
+                            <td>DATABASE_DELETE<br><br>If automatic backups are enabled, also need DB_BACKUP_DELETE</td>
+                            <td>rds:DeleteDBInstance</td>
+                            <td>Delete a database</td>
+                        </tr>
+                        <tr>
+                            <td>ListDataGuardAssociations</td>
+                            <td>DATABASE_INSPECT</td>
+                            <td>N/A</td>
+                            <td>List Data Guard associations for a database</td>
+                        </tr>
+                        <tr>
+                            <td>GetDataGuardAssociation</td>
+                            <td>DATABASE_INSPECT</td>
+                            <td>N/A</td>
+                            <td>Get details about a Data Guard association</td>
+                        </tr>
+                        <tr>
+                            <td>CreateDataGuardAssociation</td>
+                            <td>DB_SYSTEM_UPDATE and DB_HOME_CREATE and DB_HOME_UPDATE and DATABASE_CREATE and DATABASE_UPDATE</td>
+                            <td>rds:CreateDBInstance (with standby option)</td>
+                            <td>Create a Data Guard association for high availability</td>
+                        </tr>
+                        <tr>
+                            <td>SwitchoverDataGuardAssociation</td>
+                            <td>DATABASE_UPDATE</td>
+                            <td>rds:FailoverDBCluster</td>
+                            <td>Switchover to a standby database</td>
+                        </tr>
+                        <tr>
+                            <td>FailoverDataGuardAssociation</td>
+                            <td>DATABASE_UPDATE</td>
+                            <td>rds:FailoverDBCluster</td>
+                            <td>Perform a failover to a standby database</td>
+                        </tr>
+                        <tr>
+                            <td>ReinstateDataGuardAssociation</td>
+                            <td>DATABASE_UPDATE</td>
+                            <td>N/A</td>
+                            <td>Reinstate a failed standby database</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Pluggable Database Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <strong>Pluggable Databases:</strong> OCI supports Oracle's multitenant architecture with Container Databases (CDBs) and Pluggable Databases (PDBs). AWS RDS for Oracle does support this feature, but with different management operations.
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListPluggableDatabases</td>
+                            <td>PLUGGABLE_DATABASE_INSPECT</td>
+                            <td>N/A</td>
+                            <td>List all pluggable databases in a compartment</td>
+                        </tr>
+                        <tr>
+                            <td>GetPluggableDatabase</td>
+                            <td>PLUGGABLE_DATABASE_INSPECT</td>
+                            <td>N/A</td>
+                            <td>Get information about a specific pluggable database</td>
+                        </tr>
+                        <tr>
+                            <td>CreatePluggableDatabase</td>
+                            <td>DATABASE_INSPECT* and DATABASE_UPDATE* and PLUGGABLE_DATABASE_CREATE<br><br>Additional permissions required if auto-backups are enabled: PLUGGABLE_DATABASE_CONTENT_READ</td>
+                            <td>N/A</td>
+                            <td>Create a new pluggable database</td>
+                        </tr>
+                        <tr>
+                            <td>UpdatePluggableDatabase</td>
+                            <td>PLUGGABLE_DATABASE_INSPECT and PLUGGABLE_DATABASE_UPDATE<br><br>Additional permissions required if auto-backups are enabled: PLUGGABLE_DATABASE_CONTENT_READ</td>
+                            <td>N/A</td>
+                            <td>Update a pluggable database</td>
+                        </tr>
+                        <tr>
+                            <td>StartPluggableDatabase</td>
+                            <td>PLUGGABLE_DATABASE_INSPECT and PLUGGABLE_DATABASE_UPDATE</td>
+                            <td>N/A</td>
+                            <td>Start a pluggable database</td>
+                        </tr>
+                        <tr>
+                            <td>StopPluggableDatabase</td>
+                            <td>PLUGGABLE_DATABASE_INSPECT and PLUGGABLE_DATABASE_UPDATE</td>
+                            <td>N/A</td>
+                            <td>Stop a pluggable database</td>
+                        </tr>
+                        <tr>
+                            <td>DeletePluggableDatabase</td>
+                            <td>DATABASE_INSPECT (exists) and DATABASE_UPDATE (exists) and PLUGGABLE_DATABASE_DELETE</td>
+                            <td>N/A</td>
+                            <td>Delete a pluggable database</td>
+                        </tr>
+                        <tr>
+                            <td>LocalClonePluggableDatabase</td>
+                            <td>DATABASE_INSPECT* and DATABASE_UPDATE* and PLUGGABLE_DATABASE_INSPECT and PLUGGABLE_DATABASE_UPDATE and PLUGGABLE_DATABASE_CONTENT_READ and PLUGGABLE_DATABASE_CREATE and PLUGGABLE_DATABASE_CONTENT_WRITE</td>
+                            <td>N/A</td>
+                            <td>Create a clone of a pluggable database in the same container database</td>
+                        </tr>
+                        <tr>
+                            <td>RemoteClonePluggableDatabase</td>
+                            <td>DATABASE_INSPECT* and DATABASE_UPDATE* and PLUGGABLE_DATABASE_INSPECT and PLUGGABLE_DATABASE_UPDATE and PLUGGABLE_DATABASE_CONTENT_READ and PLUGGABLE_DATABASE_CREATE and PLUGGABLE_DATABASE_CONTENT_WRITE</td>
+                            <td>N/A</td>
+                            <td>Create a clone of a pluggable database in a different container database</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Database Backup Operations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>API Operation</th>
+                            <th>Permissions Required</th>
+                            <th>AWS Equivalent</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ListBackups</td>
+                            <td>DB_BACKUP_INSPECT</td>
+                            <td>rds:DescribeDBSnapshots</td>
+                            <td>Permission to list all database backups in a compartment</td>
+                        </tr>
+                        <tr>
+                            <td>GetBackup</td>
+                            <td>DB_BACKUP_INSPECT</td>
+                            <td>rds:DescribeDBSnapshots</td>
+                            <td>Permission to get information about a specific backup</td>
+                        </tr>
+                        <tr>
+                            <td>CreateBackup</td>
+                            <td>DB_BACKUP_CREATE and DATABASE_CONTENT_READ</td>
+                            <td>rds:CreateDBSnapshot</td>
+                            <td>Create a database backup</td>
+                        </tr>
+                        <tr>
+                            <td>UpdateBackup</td>
+                            <td>DB_BACKUP_INSPECT and DB_BACKUP_UPDATE</td>
+                            <td>N/A (AWS doesn't allow snapshot updates)</td>
+                            <td>Update a backup</td>
+                        </tr>
+                        <tr>
+                            <td>ChangeBackupCompartment</td>
+                            <td>DB_BACKUP_UPDATE</td>
+                            <td>N/A (AWS doesn't have compartments)</td>
+                            <td>Move a backup to another compartment</td>
+                        </tr>
+                        <tr>
+                            <td>DeleteBackup</td>
+                            <td>DB_BACKUP_DELETE</td>
+                            <td>rds:DeleteDBSnapshot</td>
+                            <td>Delete a backup</td>
+                        </tr>
+                        <tr>
+                            <td>RestoreDatabase</td>
+                            <td>DATABASE_CONTENT_WRITE<br><br>If creating a new database, also need DATABASE_CREATE</td>
+                            <td>rds:RestoreDBInstanceFromDBSnapshot</td>
+                            <td>Restore a database from a backup</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Creating AWS-to-OCI Database Policies</h5>
+        </div>
+        <div class="card-body">
+            <h6>Example: AWS Database Administrator Policy</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "rds:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group DatabaseAdmins to manage db-systems in compartment MyCompartment
+Allow group DatabaseAdmins to manage db-homes in compartment MyCompartment
+Allow group DatabaseAdmins to manage databases in compartment MyCompartment
+Allow group DatabaseAdmins to manage db-backups in compartment MyCompartment</pre>
+
+            <h6 class="mt-4">Example: AWS Read-Only Database Access</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "rds:Describe*",
+        "rds:List*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group DatabaseReaders to inspect db-systems in compartment MyCompartment
+Allow group DatabaseReaders to inspect db-homes in compartment MyCompartment
+Allow group DatabaseReaders to inspect databases in compartment MyCompartment
+Allow group DatabaseReaders to inspect db-backups in compartment MyCompartment</pre>
+
+            <h6 class="mt-4">Example: Granular AWS Database Operations</h6>
+            <pre class="policy-output">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "rds:CreateDBSnapshot",
+        "rds:DeleteDBSnapshot",
+        "rds:DescribeDBSnapshots"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</pre>
+
+            <h6 class="mt-4">Equivalent OCI Policy:</h6>
+            <pre class="policy-output">Allow group DatabaseBackupOperators to manage db-backups in compartment MyCompartment
+Allow group DatabaseBackupOperators to read database-contents in compartment MyCompartment</pre>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Understanding OCI Database Permission Strings</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>OCI Permission String</th>
+                            <th>Description</th>
+                            <th>Used For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>DB_SYSTEM_INSPECT</td>
+                            <td>View DB system metadata and list DB systems</td>
+                            <td>List and describe DB systems</td>
+                        </tr>
+                        <tr>
+                            <td>DB_SYSTEM_CREATE</td>
+                            <td>Create new DB systems</td>
+                            <td>Launch new database systems</td>
+                        </tr>
+                        <tr>
+                            <td>DB_SYSTEM_UPDATE</td>
+                            <td>Modify existing DB systems</td>
+                            <td>Update DB system configurations</td>
+                        </tr>
+                        <tr>
+                            <td>DB_SYSTEM_DELETE</td>
+                            <td>Delete DB systems</td>
+                            <td>Terminate DB systems</td>
+                        </tr>
+                        <tr>
+                            <td>DB_HOME_INSPECT</td>
+                            <td>View DB home metadata and list DB homes</td>
+                            <td>List and describe DB homes</td>
+                        </tr>
+                        <tr>
+                            <td>DB_HOME_CREATE</td>
+                            <td>Create new DB homes</td>
+                            <td>Create new database homes</td>
+                        </tr>
+                        <tr>
+                            <td>DB_HOME_UPDATE</td>
+                            <td>Modify existing DB homes</td>
+                            <td>Update DB home configurations</td>
+                        </tr>
+                        <tr>
+                            <td>DB_HOME_DELETE</td>
+                            <td>Delete DB homes</td>
+                            <td>Delete DB homes</td>
+                        </tr>
+                        <tr>
+                            <td>DATABASE_INSPECT</td>
+                            <td>View database metadata and list databases</td>
+                            <td>List and describe databases</td>
+                        </tr>
+                        <tr>
+                            <td>DATABASE_CREATE</td>
+                            <td>Create new databases</td>
+                            <td>Create new databases</td>
+                        </tr>
+                        <tr>
+                            <td>DATABASE_UPDATE</td>
+                            <td>Modify existing databases</td>
+                            <td>Update database configurations</td>
+                        </tr>
+                        <tr>
+                            <td>DATABASE_DELETE</td>
+                            <td>Delete databases</td>
+                            <td>Delete databases</td>
+                        </tr>
+                        <tr>
+                            <td>DATABASE_CONTENT_READ</td>
+                            <td>Read database content</td>
+                            <td>Required for backup operations</td>
+                        </tr>
+                        <tr>
+                            <td>DATABASE_CONTENT_WRITE</td>
+                            <td>Write to database content</td>
+                            <td>Required for restore operations</td>
+                        </tr>
+                        <tr>
+                            <td>DB_BACKUP_INSPECT</td>
+                            <td>View backup metadata and list backups</td>
+                            <td>List and describe backups</td>
+                        </tr>
+                        <tr>
+                            <td>DB_BACKUP_CREATE</td>
+                            <td>Create new backups</td>
+                            <td>Create database backups</td>
+                        </tr>
+                        <tr>
+                            <td>DB_BACKUP_UPDATE</td>
+                            <td>Modify existing backups</td>
+                            <td>Update backup configurations</td>
+                        </tr>
+                        <tr>
+                            <td>DB_BACKUP_DELETE</td>
+                            <td>Delete backups</td>
+                            <td>Delete database backups</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

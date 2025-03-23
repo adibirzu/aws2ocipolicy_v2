@@ -5,9 +5,15 @@ import json
 
 # Add the parent directory to sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from translator import translate_simple_policy, translate_advanced_policy, SERVICE_MAPPINGS
+# Import translator first
+from translator import translate_simple_policy, translate_advanced_policy, SERVICE_MAPPINGS, OCI_RESOURCE_TYPES
+# Import and initialize validators
+import validators
+validators.SERVICE_MAPPINGS = SERVICE_MAPPINGS
+validators.OCI_RESOURCE_TYPES = OCI_RESOURCE_TYPES
 from validators import validate_policy
 from policy_parser import run_policy_parser
+from aws_policy_utils import generate_policy_from_params, get_common_actions_for_service
 
 # Configure logging
 logging.basicConfig(
@@ -52,6 +58,81 @@ def action_mappings():
 @policy_routes.route('/policy-differences')
 def policy_differences():
     return render_template('policy_differences.html')
+
+@policy_routes.route('/aws-policy-generator')
+def aws_policy_generator():
+    return render_template('aws_policy_generator.html')
+
+@policy_routes.route('/database-api-operations')
+def database_api_operations():
+    return render_template('database_api_operations.html')
+
+@policy_routes.route('/network-api-operations')
+def network_api_operations():
+    return render_template('network_api_operations.html')
+
+@policy_routes.route('/security-api-operations')
+def security_api_operations():
+    return render_template('security_api_operations.html')
+
+@policy_routes.route('/observability-api-operations')
+def observability_api_operations():
+    return render_template('observability_api_operations.html')
+
+@policy_routes.route('/cloud-guard-oag-api-operations')
+def cloud_guard_oag_api_operations():
+    return render_template('cloud_guard_oag_api_operations.html')
+
+@policy_routes.route('/devops-api-operations')
+def devops_api_operations():
+    return render_template('devops_api_operations.html')
+
+@policy_routes.route('/oci-conditions')
+def oci_conditions():
+    return render_template('oci_conditions.html')
+
+@policy_routes.route('/api/generate-aws-policy', methods=['POST'])
+def generate_aws_policy():
+    """
+    Generates an AWS IAM policy based on the provided parameters
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "Invalid request data"}), 400
+
+        effect = data.get("effect", "Allow")
+        service = data.get("service", "")
+        actions = data.get("actions", [])
+        resources = data.get("resources", ["*"])
+        conditions = data.get("conditions", [])
+        
+        # Generate the AWS policy
+        aws_policy = generate_policy_from_params(effect, service, actions, resources, conditions)
+        logger.info(f"Generated AWS policy for service: {service}")
+        
+        return jsonify({"policy": aws_policy})
+    
+    except Exception as e:
+        logger.exception(f"Error generating AWS policy: {str(e)}")
+        return jsonify({"error": f"Error generating policy: {str(e)}"}), 500
+
+@policy_routes.route('/api/list-service-actions', methods=['GET'])
+def list_service_actions():
+    """
+    Returns a list of common actions for a specified AWS service
+    """
+    try:
+        service = request.args.get('service', '')
+        if not service:
+            return jsonify({"error": "Service parameter is required"}), 400
+            
+        actions = get_common_actions_for_service(service)
+        return jsonify({"actions": actions})
+    
+    except Exception as e:
+        logger.exception(f"Error retrieving actions for service {service}: {str(e)}")
+        return jsonify({"error": f"Error retrieving actions: {str(e)}"}), 500
 
 @policy_routes.route('/oci-reference-policies')
 def oci_reference_policies():

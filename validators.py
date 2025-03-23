@@ -3,11 +3,61 @@ import logging
 import os
 import sys
 
-# Add the parent directory to sys.path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from translator import SERVICE_MAPPINGS, OCI_RESOURCE_TYPES
-
 logger = logging.getLogger(__name__)
+from resource_validation_logger import log_invalid_resource
+from oci_resource_types import is_valid_oci_resource, OCI_RESOURCE_FAMILIES, OCI_SERVICE_RESOURCES, STANDALONE_RESOURCES
+
+# Do not import from translator to avoid circular imports
+# Will populate these later after resolving imports
+SERVICE_MAPPINGS = {}
+OCI_RESOURCE_TYPES = {}
+
+def build_conditions(conditions, resource_type, resource_ocid):
+    """
+    Builds OCI policy conditions from AWS conditions.
+    
+    Args:
+        conditions (dict): AWS policy conditions
+        resource_type (str): OCI resource type
+        resource_ocid (str): OCI resource OCID
+        
+    Returns:
+        str: OCI condition string
+    """
+    if not conditions:
+        return ""
+    
+    conds = []
+    
+    # Handle resource constraints with proper OCID
+    if resource_ocid and resource_type:
+        # Validate the OCID format
+        if validate_resource_ocid(resource_ocid):
+            conds.append(f"target.{resource_type}.id = '{resource_ocid}'")
+        else:
+            logger.warning(f"Invalid OCID format: {resource_ocid}. This may result in invalid policy conditions.")
+            conds.append(f"target.{resource_type}.id = '{resource_ocid}'")
+    
+    # Process standard condition operators
+    # This is a simplified implementation
+    for operator, content in conditions.items():
+        for key, values in content.items():
+            # Object Storage specific conditions
+            if key.startswith("s3:"):
+                if key == "s3:prefix":
+                    prefix_conds = []
+                    if isinstance(values, str):
+                        values = [values]
+                    for v in values:
+                        prefix_conds.append(f"target.object.name like '{v}%'")
+                    if prefix_conds:
+                        conds.append("(" + " or ".join(prefix_conds) + ")")
+    
+    # Join conditions with AND
+    if conds:
+        return " and ".join(conds)
+    else:
+        return ""
 
 # OCI policy format regex patterns
 # Standard OCI policy format
@@ -146,6 +196,7 @@ def validate_policy(policy):
 def validate_oci_resource(resource_str):
     """
     Validates if the resource string is a valid OCI resource.
+    Uses the comprehensive resource validation from oci_resource_types module.
     
     Args:
         resource_str (str): Resource string to validate
@@ -153,16 +204,16 @@ def validate_oci_resource(resource_str):
     Returns:
         bool: True if resource is valid, False otherwise
     """
-    # Check if resource is "all-resources"
-    if resource_str == "all-resources":
+    # First, use the comprehensive resource validation from oci_resource_types
+    if is_valid_oci_resource(resource_str):
         return True
     
-    # Check for service-level resources (e.g., "object-storage")
+    # Legacy validation logic for backward compatibility
+    # Check for service-level resources
     if resource_str in OCI_RESOURCE_TYPES.keys():
         return True
     
-    # Special cases for AWS services that map to OCI services
-    # These are services that don't have a direct one-to-one mapping in OCI_RESOURCE_TYPES
+    # Check for special AWS services that map to OCI services
     special_services = [
         "container-registry",      # ECR
         "notification-service",    # SNS/notifications
@@ -176,12 +227,11 @@ def validate_oci_resource(resource_str):
     parts = resource_str.split()
     if len(parts) == 2:
         service, resource_type = parts
-        
-        # Check if it's in the official OCI resource types
+        # Check legacy resource types
         if service in OCI_RESOURCE_TYPES and resource_type in OCI_RESOURCE_TYPES.get(service, []):
             return True
         
-        # Special cases for service-resource combinations
+        # Legacy special combinations
         special_combinations = {
             "container-registry": ["repository", "image"],
             "notification-service": ["topic", "subscription"],
@@ -191,9 +241,13 @@ def validate_oci_resource(resource_str):
         if service in special_combinations and resource_type in special_combinations[service]:
             return True
     
-    # Special case for resource-family resources
-    if " family" in resource_str or " families" in resource_str:
-        return True
+    # If we got here, the resource is invalid, so log it for future improvements
+    parts = resource_str.split() if " " in resource_str else [resource_str]
+    if len(parts) == 2:
+        service, resource_type = parts
+        log_invalid_resource(resource_str, service=service, additional_info={"resource_type": resource_type})
+    else:
+        log_invalid_resource(resource_str)
         
     return False
 

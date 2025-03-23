@@ -1,6 +1,8 @@
 # AWS to OCI Policy Translator
 
 A web application that translates AWS IAM policies to Oracle Cloud Infrastructure (OCI) policies with support for various service-specific policy types.
+This is not an Oracle Corporation Software!!It was created to help and better understand OCI Policies and how to create them when you are moving from AWS. For most of the policies I tested manually,
+the response was the one from Oracle Documentation. For advanced ones, if there are errors, or the policy is not correct, please provide the correct one, and I will update the code. 
 
 ## Features
 
@@ -9,11 +11,14 @@ A web application that translates AWS IAM policies to Oracle Cloud Infrastructur
   - IAM policies
   - Compute policies
   - Object Storage policies
-- Comprehensive OCI policy reference documentation
+- Interactive AWS policy generator with support for common AWS services
+- Comprehensive OCI policy reference documentation and examples
+- OCI condition patterns with examples for simulating AWS "Deny" statements
 - Policy validation to ensure correct syntax
 - Save policies as text files
 - Up-to-date service mappings between AWS and OCI
 - Web scraper to keep OCI policy reference information current
+- Database API operations reference for granular permission control
 
 ## Prerequisites for Ubuntu
 
@@ -124,6 +129,42 @@ gunicorn -w 4 -b 0.0.0.0:5001 app:app
    - Expand sections to view details about resource types, verbs, and API operations
    - Click "Update Policy Reference Data" to refresh the data from OCI documentation
 
+## Screenshots
+
+### Main Navigation Menu
+![Main Navigation Menu](screenshots/main_menu.png)
+*The main navigation bar showing all available tools and reference sections*
+
+### Simple Policy Translation
+![Simple Policy Translation](screenshots/simple_policy.png)
+*The simple policy translation interface where users can input AWS policies and get OCI equivalents*
+
+### Advanced Policy Translation - Compute
+![Compute Policy Translation](screenshots/compute_policy.png)
+*Specialized interface for translating AWS EC2 policies to OCI Compute policies*
+
+### Advanced Policy Translation - Object Storage
+![Object Storage Policy Translation](screenshots/object_storage_policy.png)
+*Interface for translating AWS S3 policies to OCI Object Storage policies*
+
+### AWS Policy Generator
+![AWS Policy Generator](screenshots/aws_policy_generator.png)
+*Interactive AWS policy builder with automatic OCI translation*
+
+### OCI Reference Policies
+![OCI Reference Policies](screenshots/oci_reference.png)
+*Comprehensive documentation of OCI policy syntax, resource types and examples*
+
+### Service Mappings
+![Service Mappings](screenshots/service_mappings.png)
+*Mapping between AWS services and their OCI equivalents*
+
+### OCI Policy Templates
+![OCI Policy Templates](screenshots/policy_templates.png)
+*Pre-defined OCI policy templates for common administrator roles*
+
+> **Note:** Replace these screenshot placeholders with actual screenshots of your running application. The screenshots directory should be created in the root of your project.
+
 ## Troubleshooting
 
 - If you encounter any dependency issues, ensure that all required packages are installed:
@@ -135,6 +176,40 @@ gunicorn -w 4 -b 0.0.0.0:5001 app:app
 
 - For any issues with the application, check the console output for error messages.
 
+## Resources Used for Policy Builder
+
+The AWS Policy Generator functionality utilizes the following resources:
+
+- **aws-policy-generator** - Python library for programmatically building AWS IAM policies
+- **awspolicy** - Python library for parsing and analyzing AWS IAM policies
+- **AWS IAM Documentation** - Reference for AWS IAM policy structure and syntax
+- **OCI IAM Documentation** - Reference for OCI policy structure and syntax
+- **Bootstrap 5** - Front-end framework for the web interface
+- **Flask** - Python web framework for the backend application
+- **jQuery** - JavaScript library for DOM manipulation and AJAX requests
+
 ## License
 
-[License details would go here]
+AWS to OCI Policy Translator is licensed under the following custom license:
+
+### AWS to OCI Policy Translator License
+
+1. **Permission to Use and Modify**:
+   - You are granted a non-exclusive, worldwide, royalty-free license to use, copy, modify, and distribute this software for personal, non-commercial, or internal business purposes.
+   - You may create and distribute derivative works based on this software.
+
+2. **Restrictions**:
+   - You may NOT sell, sublicense, or commercially distribute this software or any derivative works based on this software without explicit permission from the original author.
+   - This license explicitly prohibits reselling this software or offering it as a paid service without prior written consent.
+
+3. **Attribution**:
+   - Any distribution of this software or derivative works must include attribution to the original authors and a link to the original repository.
+
+4. **No Warranty**:
+   - This software is provided "AS IS" without warranty of any kind, express or implied.
+   - The authors or copyright holders shall not be liable for any claim, damages, or other liability arising from the use of the software.
+
+5. **Termination**:
+   - This license automatically terminates if you violate any of its terms.
+
+By using this software, you agree to the terms of this license.

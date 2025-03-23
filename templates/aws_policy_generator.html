@@ -1,0 +1,426 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>AWS Policy Generator</h2>
+    <p>Create an AWS IAM policy and translate it to OCI policy.</p>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Step 1: Define AWS Policy</h5>
+        </div>
+        <div class="card-body">
+            <form id="aws-policy-form">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="effect" class="form-label">Effect</label>
+                        <select class="form-select" id="effect">
+                            <option value="Allow" selected>Allow</option>
+                            <option value="Deny">Deny</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="service" class="form-label">AWS Service</label>
+                        <select class="form-select" id="service" onchange="updateActions()">
+                            <option value="" selected disabled>Select a service</option>
+                            <option value="s3">S3 (Object Storage)</option>
+                            <option value="ec2">EC2 (Compute)</option>
+                            <option value="iam">IAM (Identity)</option>
+                            <option value="rds">RDS (Database)</option>
+                            <option value="dynamodb">DynamoDB (NoSQL Database)</option>
+                            <option value="lambda">Lambda (Functions)</option>
+                            <option value="vpc">VPC (Networking)</option>
+                            <option value="kms">KMS (Key Management)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="actions" class="form-label">Actions</label>
+                        <select class="form-select" id="actions" multiple size="6">
+                            <option disabled>Select a service first</option>
+                        </select>
+                        <div class="form-text">Hold Ctrl/Cmd to select multiple actions.</div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="resources" class="form-label">Resource ARNs</label>
+                        <textarea class="form-control" id="resources" rows="3" placeholder="Enter resource ARNs, one per line. Use * for all resources.">*</textarea>
+                        <div class="form-text">Enter one resource ARN per line, or * for all resources.</div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="conditions" class="form-label">Conditions (Optional)</label>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-md-4">
+                                        <select class="form-select" id="condition-operator">
+                                            <option value="" selected disabled>Select operator</option>
+                                            <option value="StringEquals">StringEquals</option>
+                                            <option value="StringNotEquals">StringNotEquals</option>
+                                            <option value="StringLike">StringLike</option>
+                                            <option value="StringNotLike">StringNotLike</option>
+                                            <option value="NumericEquals">NumericEquals</option>
+                                            <option value="NumericNotEquals">NumericNotEquals</option>
+                                            <option value="NumericLessThan">NumericLessThan</option>
+                                            <option value="NumericGreaterThan">NumericGreaterThan</option>
+                                            <option value="DateEquals">DateEquals</option>
+                                            <option value="DateNotEquals">DateNotEquals</option>
+                                            <option value="DateLessThan">DateLessThan</option>
+                                            <option value="DateGreaterThan">DateGreaterThan</option>
+                                            <option value="Bool">Bool</option>
+                                            <option value="IpAddress">IpAddress</option>
+                                            <option value="NotIpAddress">NotIpAddress</option>
+                                            <option value="ArnEquals">ArnEquals</option>
+                                            <option value="ArnNotEquals">ArnNotEquals</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" id="condition-key" placeholder="Condition key (e.g. aws:SourceIp)">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" id="condition-value" placeholder="Value">
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="add-condition">Add Condition</button>
+                            </div>
+                        </div>
+                        <div id="conditions-list" class="mt-2">
+                            <!-- Conditions will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary" onclick="generateAwsPolicy()">Generate AWS Policy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Step 2: Generated AWS Policy</h5>
+        </div>
+        <div class="card-body">
+            <pre id="aws-policy-output" class="policy-output">No policy generated yet.</pre>
+            <div class="d-grid gap-2 mt-3">
+                <button type="button" class="btn btn-primary" id="translate-button" disabled onclick="translateToOci()">Translate to OCI Policy</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Step 3: OCI Group Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="oci-group" class="form-label">OCI Group Name</label>
+                    <input type="text" class="form-control" id="oci-group" placeholder="Enter OCI group name">
+                </div>
+                <div class="col-md-6">
+                    <label for="identity-domains" class="form-label">Identity Domains</label>
+                    <div class="form-check form-switch mt-2">
+                        <input class="form-check-input" type="checkbox" id="identity-domains">
+                        <label class="form-check-label" for="identity-domains">Use Identity Domains</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Step 4: Equivalent OCI Policy</h5>
+        </div>
+        <div class="card-body">
+            <pre id="oci-policy-output" class="policy-output">No policy translated yet.</pre>
+            <div id="oci-policy-errors" class="error-message mt-2"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Store available actions by service
+    const serviceActions = {
+        's3': [
+            's3:GetObject', 's3:PutObject', 's3:DeleteObject', 's3:ListBucket', 's3:CreateBucket', 
+            's3:DeleteBucket', 's3:GetBucketPolicy', 's3:PutBucketPolicy', 's3:GetBucketLocation',
+            's3:ListAllMyBuckets', 's3:GetObjectTagging', 's3:PutObjectTagging'
+        ],
+        'ec2': [
+            'ec2:DescribeInstances', 'ec2:RunInstances', 'ec2:StartInstances', 'ec2:StopInstances', 'ec2:TerminateInstances',
+            'ec2:CreateImage', 'ec2:DescribeImages', 'ec2:DeleteImage', 'ec2:CreateVolume', 'ec2:DeleteVolume',
+            'ec2:AttachVolume', 'ec2:DetachVolume', 'ec2:DescribeVolumes', 'ec2:CreateTags', 'ec2:DeleteTags'
+        ],
+        'iam': [
+            'iam:CreateUser', 'iam:DeleteUser', 'iam:GetUser', 'iam:ListUsers', 
+            'iam:CreateGroup', 'iam:DeleteGroup', 'iam:GetGroup', 'iam:ListGroups',
+            'iam:CreateRole', 'iam:DeleteRole', 'iam:GetRole', 'iam:ListRoles',
+            'iam:CreatePolicy', 'iam:DeletePolicy', 'iam:GetPolicy', 'iam:ListPolicies'
+        ],
+        'rds': [
+            'rds:CreateDBInstance', 'rds:DeleteDBInstance', 'rds:DescribeDBInstances', 
+            'rds:ModifyDBInstance', 'rds:StartDBInstance', 'rds:StopDBInstance',
+            'rds:CreateDBSnapshot', 'rds:DeleteDBSnapshot', 'rds:DescribeDBSnapshots',
+            'rds:RestoreDBInstanceFromSnapshot', 'rds:AddTagsToResource', 'rds:RemoveTagsFromResource'
+        ],
+        'dynamodb': [
+            'dynamodb:CreateTable', 'dynamodb:DeleteTable', 'dynamodb:DescribeTable', 'dynamodb:ListTables',
+            'dynamodb:GetItem', 'dynamodb:PutItem', 'dynamodb:UpdateItem', 'dynamodb:DeleteItem',
+            'dynamodb:Query', 'dynamodb:Scan', 'dynamodb:BatchGetItem', 'dynamodb:BatchWriteItem'
+        ],
+        'lambda': [
+            'lambda:CreateFunction', 'lambda:DeleteFunction', 'lambda:GetFunction', 'lambda:ListFunctions',
+            'lambda:InvokeFunction', 'lambda:UpdateFunctionCode', 'lambda:UpdateFunctionConfiguration',
+            'lambda:GetFunctionConfiguration', 'lambda:AddPermission', 'lambda:RemovePermission'
+        ],
+        'vpc': [
+            'ec2:CreateVpc', 'ec2:DeleteVpc', 'ec2:DescribeVpcs', 'ec2:CreateSubnet', 'ec2:DeleteSubnet',
+            'ec2:DescribeSubnets', 'ec2:CreateSecurityGroup', 'ec2:DeleteSecurityGroup', 'ec2:DescribeSecurityGroups',
+            'ec2:CreateRouteTable', 'ec2:DeleteRouteTable', 'ec2:DescribeRouteTables', 'ec2:CreateInternetGateway',
+            'ec2:DeleteInternetGateway', 'ec2:DescribeInternetGateways'
+        ],
+        'kms': [
+            'kms:CreateKey', 'kms:DescribeKey', 'kms:ListKeys', 'kms:ScheduleKeyDeletion',
+            'kms:Encrypt', 'kms:Decrypt', 'kms:ReEncrypt*', 'kms:GenerateDataKey',
+            'kms:GenerateDataKeyWithoutPlaintext', 'kms:EnableKey', 'kms:DisableKey'
+        ]
+    };
+
+    // Update actions dropdown when service changes
+    function updateActions() {
+        const service = document.getElementById('service').value;
+        const actionsSelect = document.getElementById('actions');
+        
+        // Clear current options
+        actionsSelect.innerHTML = '';
+        
+        // Add wildcard option
+        const wildcardOption = document.createElement('option');
+        wildcardOption.value = `${service}:*`;
+        wildcardOption.text = `All ${service.toUpperCase()} Actions (${service}:*)`;
+        actionsSelect.appendChild(wildcardOption);
+        
+        // Add specific actions
+        if (serviceActions[service]) {
+            serviceActions[service].forEach(action => {
+                const option = document.createElement('option');
+                option.value = action;
+                option.text = action;
+                actionsSelect.appendChild(option);
+            });
+        }
+    }
+
+    // Global variable to store conditions
+    let conditions = [];
+
+    // Add condition to the list
+    document.getElementById('add-condition').addEventListener('click', function() {
+        const operator = document.getElementById('condition-operator').value;
+        const key = document.getElementById('condition-key').value;
+        const value = document.getElementById('condition-value').value;
+        
+        if (!operator || !key || !value) {
+            alert('Please fill in all condition fields');
+            return;
+        }
+        
+        // Add condition to array
+        conditions.push({
+            operator,
+            key,
+            value
+        });
+        
+        // Update UI
+        updateConditionsList();
+        
+        // Clear inputs
+        document.getElementById('condition-operator').selectedIndex = 0;
+        document.getElementById('condition-key').value = '';
+        document.getElementById('condition-value').value = '';
+    });
+
+    // Update the conditions list display
+    function updateConditionsList() {
+        const conditionsList = document.getElementById('conditions-list');
+        conditionsList.innerHTML = '';
+        
+        if (conditions.length === 0) {
+            return;
+        }
+        
+        const table = document.createElement('table');
+        table.className = 'table table-sm table-bordered mt-2';
+        
+        // Create header
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        ['Operator', 'Key', 'Value', 'Action'].forEach(text => {
+            const th = document.createElement('th');
+            th.textContent = text;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        
+        // Create body
+        const tbody = document.createElement('tbody');
+        conditions.forEach((condition, index) => {
+            const row = document.createElement('tr');
+            
+            const operatorCell = document.createElement('td');
+            operatorCell.textContent = condition.operator;
+            row.appendChild(operatorCell);
+            
+            const keyCell = document.createElement('td');
+            keyCell.textContent = condition.key;
+            row.appendChild(keyCell);
+            
+            const valueCell = document.createElement('td');
+            valueCell.textContent = condition.value;
+            row.appendChild(valueCell);
+            
+            const actionCell = document.createElement('td');
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn btn-sm btn-danger';
+            deleteButton.textContent = 'Remove';
+            deleteButton.onclick = function() {
+                conditions.splice(index, 1);
+                updateConditionsList();
+            };
+            actionCell.appendChild(deleteButton);
+            row.appendChild(actionCell);
+            
+            tbody.appendChild(row);
+        });
+        table.appendChild(tbody);
+        
+        conditionsList.appendChild(table);
+    }
+
+    // Generate AWS policy from form inputs
+    function generateAwsPolicy() {
+        const effect = document.getElementById('effect').value;
+        const service = document.getElementById('service').value;
+        const actionsSelect = document.getElementById('actions');
+        const resourcesText = document.getElementById('resources').value;
+        
+        if (!service) {
+            alert('Please select a service');
+            return;
+        }
+        
+        // Get selected actions
+        const selectedActions = Array.from(actionsSelect.selectedOptions).map(option => option.value);
+        if (selectedActions.length === 0) {
+            alert('Please select at least one action');
+            return;
+        }
+        
+        // Parse resources
+        const resources = resourcesText.split('\n').filter(line => line.trim() !== '');
+        if (resources.length === 0) {
+            alert('Please enter at least one resource');
+            return;
+        }
+        
+        // Build policy
+        const policy = {
+            Version: '2012-10-17',
+            Statement: [
+                {
+                    Effect: effect,
+                    Action: selectedActions,
+                    Resource: resources
+                }
+            ]
+        };
+        
+        // Add conditions if any
+        if (conditions.length > 0) {
+            policy.Statement[0].Condition = {};
+            
+            conditions.forEach(condition => {
+                if (!policy.Statement[0].Condition[condition.operator]) {
+                    policy.Statement[0].Condition[condition.operator] = {};
+                }
+                policy.Statement[0].Condition[condition.operator][condition.key] = condition.value;
+            });
+        }
+        
+        // Display the policy
+        document.getElementById('aws-policy-output').textContent = JSON.stringify(policy, null, 2);
+        
+        // Enable the translate button
+        document.getElementById('translate-button').disabled = false;
+    }
+
+    // Translate AWS policy to OCI
+    function translateToOci() {
+        const awsPolicy = document.getElementById('aws-policy-output').textContent;
+        const ociGroup = document.getElementById('oci-group').value;
+        const useIdentityDomains = document.getElementById('identity-domains').checked;
+        
+        if (!ociGroup) {
+            alert('Please enter an OCI group name');
+            return;
+        }
+        
+        // Create loading indicator
+        const ociOutput = document.getElementById('oci-policy-output');
+        ociOutput.textContent = 'Translating policy...';
+        
+        // Call the API to translate
+        fetch('/api/generate-simple-policy', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                aws_policy: awsPolicy,
+                oci_group: ociGroup,
+                use_identity_domains: useIdentityDomains
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById('oci-policy-errors').textContent = data.error;
+                return;
+            }
+            
+            ociOutput.textContent = data.policy;
+            
+            if (data.errors && data.errors.length > 0) {
+                document.getElementById('oci-policy-errors').textContent = 
+                    'Warnings: ' + data.errors.join('; ');
+            } else {
+                document.getElementById('oci-policy-errors').textContent = '';
+            }
+        })
+        .catch(error => {
+            document.getElementById('oci-policy-errors').textContent = 
+                'Error translating policy: ' + error.message;
+        });
+    }
+
+    // Initialize the form
+    document.addEventListener('DOMContentLoaded', function() {
+        // Clear any previous conditions
+        conditions = [];
+    });
+</script>
+{% endblock %}

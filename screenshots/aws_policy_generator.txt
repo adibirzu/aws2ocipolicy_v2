@@ -1,0 +1,43 @@
++-------------------------------------------------------+
+|                AWS Policy Generator                   |
++-------------------------------------------------------+
+
+    [Select Service]  EC2 (Compute)       ▼
+
+    [Select Effect]   Allow              ▼
+
+✓ ec2:RunInstances    ◻ ec2:DescribeTransitGateways
+✓ ec2:DescribeInstances ◻ ec2:AttachVolume  
+◻ ec2:StartInstances  ◻ ec2:DetachVolume
+◻ ec2:StopInstances   ◻ ec2:CreateSecurityGroup
+◻ ec2:TerminateInstances ◻ ec2:AuthorizeSecurityGroupIngress
+
+    [All Resources]    ✓
+    [Specific ARN]     ◻ ___________________________
+
+[Generate AWS Policy]
+
+Generated AWS Policy:
++-----------------------------------------------------+
+| {                                                   |
+|   "Version": "2012-10-17",                          |
+|   "Statement": [{                                   |
+|     "Effect": "Allow",                              |
+|     "Action": [                                     |
+|       "ec2:RunInstances",                           |
+|       "ec2:DescribeInstances"                       |
+|     ],                                              |
+|     "Resource": ["*"]                               |
+|   }]                                                |
+| }                                                   |
++-----------------------------------------------------+
+
+Translated OCI Policy:
++-----------------------------------------------------+
+| Allow group Administrators to manage instance-family |
+| in tenancy                                          |
+| Allow group Administrators to read instance-family   |
+| in tenancy                                          |
++-----------------------------------------------------+
+
+[Save AWS Policy]  [Save OCI Policy]  [Reset]

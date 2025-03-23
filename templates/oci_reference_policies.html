@@ -31,6 +31,12 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab" aria-controls="security" aria-selected="false">Security</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="observability-tab" data-bs-toggle="tab" data-bs-target="#observability" type="button" role="tab" aria-controls="observability" aria-selected="false">Observability</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="cloud-guard-tab" data-bs-toggle="tab" data-bs-target="#cloud-guard" type="button" role="tab" aria-controls="cloud-guard" aria-selected="false">Cloud Guard & OAG</button>
+        </li>
     </ul>
     
     <!-- Tab content -->
@@ -451,70 +457,370 @@
             </div>
         </div>
         
-        <!-- More service tabs would be added here -->
-    </div>
-    
-    <!-- Data Scraper Section -->
-    <div class="card mt-4">
-        <div class="card-header">
-            <h5>Policy Reference Parser</h5>
+        <!-- Database Services -->
+        <div class="tab-pane fade" id="database" role="tabpanel" aria-labelledby="database-tab">
+            <div class="service-section" id="database-service">
+                <h3>Database</h3>
+
+                <div class="alert alert-info mb-4">
+                    <strong>Detailed API Information:</strong> See the <a href="/database-api-operations">Database API Operations</a> page for comprehensive details about each API operation and required permissions.
+                </div>
+                
+                <div class="accordion" id="databaseAccordion">
+                    <!-- Resource Types -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#databaseResourceTypes" aria-expanded="true" aria-controls="databaseResourceTypes">
+                                Resource Types
+                            </button>
+                        </h2>
+                        <div id="databaseResourceTypes" class="accordion-collapse collapse show" data-bs-parent="#databaseAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Resource Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>database-family</td>
+                                            <td>An aggregate resource-type covering all database resources</td>
+                                        </tr>
+                                        <tr>
+                                            <td>db-systems</td>
+                                            <td>The compute and storage resources for a database</td>
+                                        </tr>
+                                        <tr>
+                                            <td>db-nodes</td>
+                                            <td>Individual compute resources within a database system</td>
+                                        </tr>
+                                        <tr>
+                                            <td>db-homes</td>
+                                            <td>The software installation and database configuration</td>
+                                        </tr>
+                                        <tr>
+                                            <td>databases</td>
+                                            <td>Database instances</td>
+                                        </tr>
+                                        <tr>
+                                            <td>pluggable databases</td>
+                                            <td>Individual pluggable databases within a container database</td>
+                                        </tr>
+                                        <tr>
+                                            <td>db-backups</td>
+                                            <td>Backup resources for databases</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <p>The information on this page is gathered from the official OCI Policy Reference documentation. You can update this information by running the policy reference parser.</p>
-            <button id="runParser" class="btn btn-primary">Update Policy Reference Data</button>
-            <div id="parserOutput" class="mt-3" style="display: none;">
-                <div class="alert alert-info">
-                    Parsing in progress...
+        
+        <!-- Networking Services -->
+        <div class="tab-pane fade" id="networking" role="tabpanel" aria-labelledby="networking-tab">
+            <div class="service-section" id="vcn-service">
+                <h3>Virtual Cloud Network (VCN)</h3>
+
+                <div class="alert alert-info mb-4">
+                    <strong>Detailed API Information:</strong> See the <a href="/network-api-operations">Network API Operations</a> page for comprehensive details about each API operation and required permissions.
+                </div>
+                
+                <div class="accordion" id="networkAccordion">
+                    <!-- Resource Types -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#networkResourceTypes" aria-expanded="true" aria-controls="networkResourceTypes">
+                                Resource Types
+                            </button>
+                        </h2>
+                        <div id="networkResourceTypes" class="accordion-collapse collapse show" data-bs-parent="#networkAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Resource Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>virtual-network-family</td>
+                                            <td>An aggregate resource-type covering all VCN resources</td>
+                                        </tr>
+                                        <tr>
+                                            <td>vcn</td>
+                                            <td>Virtual Cloud Network, the main networking container</td>
+                                        </tr>
+                                        <tr>
+                                            <td>subnet</td>
+                                            <td>Subdivision of a VCN with its own security rules</td>
+                                        </tr>
+                                        <tr>
+                                            <td>security-list</td>
+                                            <td>Security rules for resources in a subnet</td>
+                                        </tr>
+                                        <tr>
+                                            <td>network-security-group</td>
+                                            <td>Security rules for specific resources</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Services -->
+        <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
+            <div class="service-section" id="security-service">
+                <h3>Security and Identity</h3>
+
+                <div class="alert alert-info mb-4">
+                    <strong>Detailed API Information:</strong> See the <a href="/security-api-operations">Security API Operations</a> page for comprehensive details about each API operation and required permissions.
+                </div>
+                
+                <div class="accordion" id="securityAccordion">
+                    <!-- Resource Types -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#securityResourceTypes" aria-expanded="true" aria-controls="securityResourceTypes">
+                                Resource Types
+                            </button>
+                        </h2>
+                        <div id="securityResourceTypes" class="accordion-collapse collapse show" data-bs-parent="#securityAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Resource Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>compartment</td>
+                                            <td>A logical container for organizing resources</td>
+                                        </tr>
+                                        <tr>
+                                            <td>tenancy</td>
+                                            <td>The root compartment of your OCI account</td>
+                                        </tr>
+                                        <tr>
+                                            <td>user</td>
+                                            <td>An individual user account</td>
+                                        </tr>
+                                        <tr>
+                                            <td>group</td>
+                                            <td>A collection of users</td>
+                                        </tr>
+                                        <tr>
+                                            <td>dynamic-group</td>
+                                            <td>A group of compute instances or other resources that match specified criteria</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Observability Services -->
+        <div class="tab-pane fade" id="observability" role="tabpanel" aria-labelledby="observability-tab">
+            <div class="service-section" id="observability-service">
+                <h3>Observability and Monitoring</h3>
+
+                <div class="alert alert-info mb-4">
+                    <strong>Detailed API Information:</strong> See the <a href="/observability-api-operations">Observability API Operations</a> page for comprehensive details about each API operation and required permissions.
+                </div>
+                
+                <div class="accordion" id="observabilityAccordion">
+                    <!-- Resource Types -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#observabilityResourceTypes" aria-expanded="true" aria-controls="observabilityResourceTypes">
+                                Resource Types
+                            </button>
+                        </h2>
+                        <div id="observabilityResourceTypes" class="accordion-collapse collapse show" data-bs-parent="#observabilityAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Resource Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>alarm</td>
+                                            <td>Monitoring alerts based on metric conditions</td>
+                                        </tr>
+                                        <tr>
+                                            <td>metrics</td>
+                                            <td>Time-series data collected from resources</td>
+                                        </tr>
+                                        <tr>
+                                            <td>log-group</td>
+                                            <td>A container for organizing logs</td>
+                                        </tr>
+                                        <tr>
+                                            <td>log</td>
+                                            <td>Log data collected from resources</td>
+                                        </tr>
+                                        <tr>
+                                            <td>apm-domain</td>
+                                            <td>Container for APM traces and monitoring</td>
+                                        </tr>
+                                        <tr>
+                                            <td>apm-synthetics</td>
+                                            <td>Synthetic monitoring for applications</td>
+                                        </tr>
+                                        <tr>
+                                            <td>logging-analytics</td>
+                                            <td>Advanced log analytics and processing</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cloud Guard & OAG Services -->
+        <div class="tab-pane fade" id="cloud-guard" role="tabpanel" aria-labelledby="cloud-guard-tab">
+            <div class="service-section" id="cloud-guard-service">
+                <h3>Cloud Guard and OCI Access Governance</h3>
+
+                <div class="alert alert-info mb-4">
+                    <strong>Detailed API Information:</strong> See the <a href="/cloud_guard_oag_api_operations">Cloud Guard & OAG API Operations</a> page for comprehensive details about each API operation and required permissions.
+                </div>
+                
+                <div class="accordion" id="cloudGuardAccordion">
+                    <!-- Resource Types -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#cloudGuardResourceTypes" aria-expanded="true" aria-controls="cloudGuardResourceTypes">
+                                Resource Types
+                            </button>
+                        </h2>
+                        <div id="cloudGuardResourceTypes" class="accordion-collapse collapse show" data-bs-parent="#cloudGuardAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Resource Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>cloud-guard-family</td>
+                                            <td>An aggregate resource-type covering all Cloud Guard resources</td>
+                                        </tr>
+                                        <tr>
+                                            <td>cloud-guard-config</td>
+                                            <td>Cloud Guard configuration</td>
+                                        </tr>
+                                        <tr>
+                                            <td>detector-recipe</td>
+                                            <td>Collection of detectors used to identify security problems</td>
+                                        </tr>
+                                        <tr>
+                                            <td>responder-recipe</td>
+                                            <td>Collection of responders used to react to detected problems</td>
+                                        </tr>
+                                        <tr>
+                                            <td>access-governance-instance</td>
+                                            <td>OCI Access Governance instance</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Verb + Resource Type Combinations -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cloudGuardVerbCombinations" aria-expanded="false" aria-controls="cloudGuardVerbCombinations">
+                                Verb + Resource Type Combinations
+                            </button>
+                        </h2>
+                        <div id="cloudGuardVerbCombinations" class="accordion-collapse collapse" data-bs-parent="#cloudGuardAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Verb</th>
+                                            <th>Resource Type</th>
+                                            <th>API Operations</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>manage</td>
+                                            <td>cloud-guard-family</td>
+                                            <td>
+                                                <ul>
+                                                    <li>CreateDetectorRecipe</li>
+                                                    <li>UpdateDetectorRecipe</li>
+                                                    <li>CreateResponderRecipe</li>
+                                                    <li>UpdateCloudGuardConfiguration</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>read</td>
+                                            <td>cloud-guard-family</td>
+                                            <td>
+                                                <ul>
+                                                    <li>GetDetectorRecipe</li>
+                                                    <li>ListDetectorRecipes</li>
+                                                    <li>GetResponderRecipe</li>
+                                                    <li>GetCloudGuardConfiguration</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>manage</td>
+                                            <td>access-governance-instance</td>
+                                            <td>
+                                                <ul>
+                                                    <li>CreateAccessGovernanceInstance</li>
+                                                    <li>UpdateAccessGovernanceInstance</li>
+                                                    <li>DeleteAccessGovernanceInstance</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>read</td>
+                                            <td>access-governance-instance</td>
+                                            <td>
+                                                <ul>
+                                                    <li>GetAccessGovernanceInstance</li>
+                                                    <li>ListAccessGovernanceInstances</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Setup parser button
-    const runParserBtn = document.getElementById('runParser');
-    const parserOutput = document.getElementById('parserOutput');
-    
-    runParserBtn.addEventListener('click', function() {
-        // Show the parsing message
-        parserOutput.style.display = 'block';
-        
-        // Call the API to run the parser
-        fetch('/api/run-policy-reference-parser', {
-            method: 'POST'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                parserOutput.innerHTML = `
-                    <div class="alert alert-success">
-                        <h5>Parser completed successfully!</h5>
-                        <p>${data.message}</p>
-                        <p>Refresh the page to see updated policy reference data.</p>
-                    </div>
-                `;
-            } else {
-                parserOutput.innerHTML = `
-                    <div class="alert alert-danger">
-                        <h5>Parser encountered an error</h5>
-                        <p>${data.error}</p>
-                    </div>
-                `;
-            }
-        })
-        .catch(error => {
-            parserOutput.innerHTML = `
-                <div class="alert alert-danger">
-                    <h5>Parser error</h5>
-                    <p>An error occurred: ${error.message}</p>
-                </div>
-            `;
-        });
-    });
-});
-</script>
 {% endblock %}

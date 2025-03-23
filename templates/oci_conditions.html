@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>OCI Policy Conditions and Patterns</h2>
+    <p>This page documents how to use conditions in OCI policies to implement complex access control, including how to simulate "Deny" functionality using conditions.</p>
+    
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Understanding OCI Conditions</h5>
+        </div>
+        <div class="card-body">
+            <p>Unlike AWS IAM which has both "Allow" and "Deny" statements, OCI IAM only supports "Allow" statements. To implement restrictive or deny-like behavior, OCI uses the <code>where</code> clause with conditions.</p>
+            
+            <div class="alert alert-info">
+                <strong>Key Difference:</strong> In OCI, access is denied by default (implicit deny). You must explicitly allow access, and can use conditions to make those "Allow" statements more selective.
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>OCI Condition Syntax</h5>
+        </div>
+        <div class="card-body">
+            <p>The basic syntax for conditions in OCI policies is:</p>
+            <pre><code>Allow group [group-name] to [verb] [resource-type] in [location] where [condition]</code></pre>
+            
+            <p>Conditions are composed of:</p>
+            <ul>
+                <li><strong>Variables</strong> (e.g., <code>request.user.name</code>, <code>target.resource.compartment.id</code>)</li>
+                <li><strong>Operators</strong> (e.g., <code>=</code>, <code>!=</code>, <code>in</code>, <code>like</code>)</li>
+                <li><strong>Values</strong> (strings, numbers, arrays)</li>
+                <li><strong>Logical operators</strong> (e.g., <code>and</code>, <code>or</code>)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Simulating "Deny" Access in OCI</h5>
+        </div>
+        <div class="card-body">
+            <p>Since OCI doesn't have explicit "Deny" statements, you need to carefully construct "Allow" statements with conditions to achieve the same effect.</p>
+            
+            <h6 class="mt-4">Approach 1: Targeted Allow Statements</h6>
+            <p>Instead of denying specific resources, allow access to everything except those resources:</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>AWS IAM (Using Deny)</h6>
+                    <pre class="policy-output">{
+  "Effect": "Deny",
+  "Action": "s3:*",
+  "Resource": "arn:aws:s3:::confidential-bucket/*"
+}</pre>
+                </div>
+                <div class="col-md-6">
+                    <h6>OCI Equivalent (Using Condition)</h6>
+                    <pre class="policy-output">Allow group Developers to manage object-storage-family in compartment Project where target.bucket.name != 'confidential-bucket'</pre>
+                </div>
+            </div>
+            
+            <h6 class="mt-4">Approach 2: Use Narrower Verbs</h6>
+            <p>Instead of denying specific actions, use a more restricted verb set:</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>AWS IAM (Using Deny)</h6>
+                    <pre class="policy-output">{
+  "Effect": "Allow",
+  "Action": "ec2:*",
+  "Resource": "*"
+},
+{
+  "Effect": "Deny",
+  "Action": [
+    "ec2:TerminateInstances",
+    "ec2:DeleteVolume"
+  ],
+  "Resource": "*"
+}</pre>
+                </div>
+                <div class="col-md-6">
+                    <h6>OCI Equivalent (Using Different Verbs)</h6>
+                    <pre class="policy-output">Allow group Developers to inspect compute in compartment Project
+Allow group Developers to read compute in compartment Project
+Allow group Developers to use compute in compartment Project</pre>
+                    <p><small class="text-muted">Note: This excludes 'manage' which would be needed for terminate/delete operations</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Common Condition Patterns</h5>
+        </div>
+        <div class="card-body">
+            <h6>Pattern 1: Resource Tag-Based Access</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>AWS IAM</h6>
+                    <pre class="policy-output">{
+  "Effect": "Allow",
+  "Action": "ec2:*",
+  "Resource": "*",
+  "Condition": {
+    "StringEquals": {
+      "aws:ResourceTag/Environment": "Production"
+    }
+  }
+}</pre>
+                </div>
+                <div class="col-md-6">
+                    <h6>OCI Equivalent</h6>
+                    <pre class="policy-output">Allow group Operators to manage compute in compartment Project where target.resource.tag.environment = 'Production'</pre>
+                </div>
+            </div>
+            
+            <h6 class="mt-4">Pattern 2: Limiting by Resource Name</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>AWS IAM</h6>
+                    <pre class="policy-output">{
+  "Effect": "Allow",
+  "Action": "s3:*",
+  "Resource": [
+    "arn:aws:s3:::log-*",
+    "arn:aws:s3:::log-*/*"
+  ]
+}</pre>
+                </div>
+                <div class="col-md-6">
+                    <h6>OCI Equivalent</h6>
+                    <pre class="policy-output">Allow group LogAdmins to manage object-storage-family in compartment Project where target.bucket.name like 'log-%'</pre>
+                </div>
+            </div>
+            
+            <h6 class="mt-4">Pattern 3: Time-Based Access</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>AWS IAM</h6>
+                    <pre class="policy-output">{
+  "Effect": "Allow",
+  "Action": "*",
+  "Resource": "*",
+  "Condition": {
+    "DateGreaterThan": {
+      "aws:CurrentTime": "2025-01-01T00:00:00Z"
+    },
+    "DateLessThan": {
+      "aws:CurrentTime": "2025-12-31T23:59:59Z"
+    }
+  }
+}</pre>
+                </div>
+                <div class="col-md-6">
+                    <h6>OCI Equivalent</h6>
+                    <pre class="policy-output">Allow group Contractors to manage all-resources in compartment Project where request.time > '2025-01-01T00:00:00Z' and request.time < '2025-12-31T23:59:59Z'</pre>
+                </div>
+            </div>
+            
+            <h6 class="mt-4">Pattern 4: IP Address Restriction</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>AWS IAM</h6>
+                    <pre class="policy-output">{
+  "Effect": "Allow",
+  "Action": "*",
+  "Resource": "*",
+  "Condition": {
+    "IpAddress": {
+      "aws:SourceIp": "192.168.1.0/24"
+    }
+  }
+}</pre>
+                </div>
+                <div class="col-md-6">
+                    <h6>OCI Equivalent</h6>
+                    <pre class="policy-output">Allow group RemoteWorkers to manage all-resources in compartment Project where request.networkSource.name = 'corporate-network'</pre>
+                    <p><small class="text-muted">Note: This requires creating a Network Source in OCI first</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Advanced Condition Patterns</h5>
+        </div>
+        <div class="card-body">
+            <h6>Pattern 1: Complex Resource Filtering</h6>
+            <pre class="policy-output">Allow group DataAnalysts to read object-storage in compartment DataLake where 
+  target.bucket.name in [any {reports/*, analytics/*}] and 
+  (target.resource.tag.dataClassification = 'Public' or target.resource.tag.dataClassification = 'Internal')</pre>
+            <p><small class="text-muted">This allows access only to objects in specific folders and with specific tags.</small></p>
+            
+            <h6 class="mt-4">Pattern 2: Permissions Based on User Attributes</h6>
+            <pre class="policy-output">Allow group Developers to manage compute in compartment Project where 
+  request.user.groups.name = 'ProjectLeads' or 
+  (target.resource.tag.owner = request.user.name)</pre>
+            <p><small class="text-muted">This allows users to manage resources only if they're project leads or own the resource.</small></p>
+            
+            <h6 class="mt-4">Pattern 3: Dynamic Compartment Access</h6>
+            <pre class="policy-output">Allow group Developers to manage all-resources in tenancy where 
+  target.compartment.name like 'Dev-%' and 
+  target.compartment.name != 'Dev-Production'</pre>
+            <p><small class="text-muted">This grants access to all development compartments except production.</small></p>
+            
+            <h6 class="mt-4">Pattern 4: Operation-Specific Restrictions</h6>
+            <pre class="policy-output">Allow group SecurityAuditors to read audit-events in tenancy where 
+  request.operation != 'BulkDeleteEvents' and 
+  request.operation != 'PurgeEvents'</pre>
+            <p><small class="text-muted">This allows reading audit logs but prevents deletion operations.</small></p>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Using anyOf and allOf Operators</h5>
+        </div>
+        <div class="card-body">
+            <p>OCI supports <code>anyOf</code> and <code>allOf</code> operators for more complex conditional logic:</p>
+            
+            <h6>Using anyOf (equivalent to OR logic):</h6>
+            <pre class="policy-output">Allow group Developers to manage object-storage in compartment Project where 
+  anyOf {
+    target.bucket.name = 'dev-bucket',
+    target.bucket.name = 'test-bucket',
+    target.bucket.name = 'qa-bucket'
+  }</pre>
+            
+            <h6 class="mt-4">Using allOf (equivalent to AND logic):</h6>
+            <pre class="policy-output">Allow group SecurityAdmins to manage security-lists in compartment Network where 
+  allOf {
+    request.user.groups.name = 'NetworkAdmins',
+    target.resource.tag.environment = 'Production',
+    request.networkSource.name = 'corporate-network'
+  }</pre>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h5>Wildcard Patterns in Conditions</h5>
+        </div>
+        <div class="card-body">
+            <p>OCI supports SQL-like wildcards in conditions using the <code>like</code> operator and <code>any</code> operator:</p>
+            
+            <h6>Using the like operator with % wildcard:</h6>
+            <pre class="policy-output">Allow group DataScientists to read object-storage-family in compartment DataLake where 
+  target.object.name like 'datasets/%.csv'</pre>
+            <p><small class="text-muted">This allows access to all CSV files in the datasets directory.</small></p>
+            
+            <h6 class="mt-4">Using the any operator with wildcards:</h6>
+            <pre class="policy-output">Allow group Developers to manage object-storage in compartment Project where 
+  target.bucket.name in [any {dev-*, test-*}]</pre>
+            <p><small class="text-muted">This allows access to any bucket with names starting with "dev-" or "test-".</small></p>
+            
+            <h6 class="mt-4">Combining wildcard patterns:</h6>
+            <pre class="policy-output">Allow group DataAnalysts to read object-storage-family in compartment DataLake where 
+  target.bucket.name = 'analytics' and 
+  target.object.name in [any {reports/*/summary.json, dashboards/*/config.json}]</pre>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Best Practices for OCI Conditions</h5>
+        </div>
+        <div class="card-body">
+            <ol>
+                <li><strong>Start with broader permissions and narrow them down with conditions</strong> rather than trying to create very specific Allow statements for each scenario.</li>
+                <li><strong>Use compartments as the primary access control mechanism</strong> and conditions as a secondary layer of filtering.</li>
+                <li><strong>Leverage tags effectively</strong> to simplify condition-based policies.</li>
+                <li><strong>Create network sources in OCI</strong> instead of specifying IP addresses directly in policies.</li>
+                <li><strong>Use variables like request.user.name</strong> to create dynamic policies that adapt based on the user.</li>
+                <li><strong>Keep policies as simple as possible</strong> - complex conditions can be hard to reason about and maintain.</li>
+                <li><strong>Test policies thoroughly</strong> in a non-production environment to ensure they behave as expected.</li>
+                <li><strong>Document the intent of each policy</strong>, especially those with complex conditions.</li>
+                <li><strong>Review policies regularly</strong> to ensure they still align with security requirements.</li>
+            </ol>
+        </div>
+    </div>
+</div>
+{% endblock %}

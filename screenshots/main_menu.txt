@@ -1,0 +1,19 @@
++-------------------------------------------------------+
+|                 AWS to OCI Policy Translator          |
++-------------------------------------------------------+
+| Home | Simple Policy | Advanced Policies ▼ | Reference ▼ |
+|       [Compute | Object Storage | IAM]    [OCI Ref | Mappings]
++-------------------------------------------------------+
+|                                                       |
+|  Welcome to the AWS to OCI Policy Translator!         |
+|                                                       |
+|  This tool helps you translate AWS IAM policies to    |
+|  Oracle Cloud Infrastructure (OCI) policies.          |
+|                                                       |
+|  - Use Simple Policy for basic translations           |
+|  - Use Advanced Policy options for service-specific   |
+|    translations                                       |
+|  - Check the Reference section for OCI policy         |
+|    documentation                                      |
+|                                                       |
++-------------------------------------------------------+

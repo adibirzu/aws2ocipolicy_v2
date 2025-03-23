@@ -1,0 +1,578 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  /* OCI color scheme */
+  .card-header {
+    background-color: #3F2F88 !important;
+    color: white;
+  }
+  .btn-primary {
+    background-color: #3F2F88;
+    border-color: #3F2F88;
+  }
+  .btn-primary:hover {
+    background-color: #312470;
+    border-color: #312470;
+  }
+  .table-primary, .table-primary > td, .table-primary > th {
+    background-color: #e7e5f2;
+  }
+  .badge-primary {
+    background-color: #3F2F88;
+  }
+  .text-primary {
+    color: #3F2F88 !important;
+  }
+  .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    background-color: #3F2F88;
+  }
+  h2, h3, h4, h5, .h5 {
+    color: #3F2F88;
+  }
+  .accordion-button:not(.collapsed) {
+    background-color: #e7e5f2;
+    color: #3F2F88;
+  }
+  thead.thead-dark {
+    background-color: #3F2F88;
+    color: white;
+  }
+  .border-primary {
+    border-color: #3F2F88 !important;
+  }
+</style>
+
+<div class="container">
+    <h2>OCI DevOps API Operations and Policy Reference</h2>
+    <p>This page provides detailed reference information about OCI DevOps resources, policy permissions, and API operations based on the <a href="https://docs.oracle.com/en-us/iaas/Content/devops/using/devops_iampolicies.htm" target="_blank">official OCI DevOps IAM policy documentation</a>.</p>
+    
+    <div class="card mt-4 mb-4 border-primary">
+        <div class="card-header">
+            <h5>DevOps IAM Policy Reference</h5>
+        </div>
+        <div class="card-body">
+            <p>OCI DevOps policies control access to various DevOps resources such as code repositories, build pipelines, and deployment pipelines. Understanding the available resource types, verbs, and permissions is essential for effective DevOps operations in OCI.</p>
+        </div>
+    </div>
+
+    <!-- Resource Types and Permissions -->
+    <div class="card mt-4 border-primary">
+        <div class="card-header">
+            <h5>Resource Types and Permissions</h5>
+        </div>
+        <div class="card-body">
+            <p>To assign permissions to all DevOps resources, use the <code>devops-family</code> aggregate type. A policy that uses <code>&lt;verb&gt; devops-family</code> is equal to writing a policy with a separate <code>&lt;verb&gt; &lt;resource-type&gt;</code> statement for each of the individual resource types.</p>
+            
+            <div class="table-responsive mt-3">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Resource Type</th>
+                            <th>Permissions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>devops-family</td>
+                            <td>
+                                <p>The verbs <code>inspect</code>, <code>read</code>, <code>use</code>, <code>manage</code> are applicable for all the DevOps resource types permissions.</p>
+                                <p>Verbs <code>inspect</code> and <code>read</code> are applicable for DEVOPS_WORK_REQUEST permission.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>devops-project</td>
+                            <td>
+                                <ul>
+                                    <li>DEVOPS_PROJECT_INSPECT</li>
+                                    <li>DEVOPS_PROJECT_READ</li>
+                                    <li>DEVOPS_PROJECT_UPDATE</li>
+                                    <li>DEVOPS_PROJECT_CREATE</li>
+                                    <li>DEVOPS_PROJECT_DELETE</li>
+                                    <li>DEVOPS_PROJECT_MOVE</li>
+                                    <li>DEVOPS_PROJECT_CASCADE_DELETE</li>
+                                    <li>DEVOPS_PROJECT_SETTINGS_READ</li>
+                                    <li>DEVOPS_PROJECT_SETTINGS_UPDATE</li>
+                                    <li>DEVOPS_PROJECT_SETTINGS_DELETE</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>devops-repository</td>
+                            <td>
+                                <ul>
+                                    <li>DEVOPS_REPOSITORY_INSPECT</li>
+                                    <li>DEVOPS_REPOSITORY_READ</li>
+                                    <li>DEVOPS_REPOSITORY_UPDATE</li>
+                                    <li>DEVOPS_REPOSITORY_CREATE</li>
+                                    <li>DEVOPS_REPOSITORY_DELETE</li>
+                                    <li>DEVOPS_REPOSITORY_USE</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>devops-build-pipeline</td>
+                            <td>
+                                <ul>
+                                    <li>DEVOPS_BUILD_PIPELINE_INSPECT</li>
+                                    <li>DEVOPS_BUILD_PIPELINE_READ</li>
+                                    <li>DEVOPS_BUILD_PIPELINE_UPDATE</li>
+                                    <li>DEVOPS_BUILD_PIPELINE_CREATE</li>
+                                    <li>DEVOPS_BUILD_PIPELINE_DELETE</li>
+                                    <li>DEVOPS_BUILD_PIPELINE_TRIGGER</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>devops-build-run</td>
+                            <td>
+                                <ul>
+                                    <li>DEVOPS_BUILD_RUN_INSPECT</li>
+                                    <li>DEVOPS_BUILD_RUN_READ</li>
+                                    <li>DEVOPS_BUILD_RUN_UPDATE</li>
+                                    <li>DEVOPS_BUILD_RUN_CANCEL</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>devops-deploy-family</td>
+                            <td>
+                                <p>The verbs <code>inspect</code>, <code>read</code>, <code>use</code>, <code>manage</code> are applicable for the following permissions:</p>
+                                <ul>
+                                    <li>DEVOPS_DEPLOY_ARTIFACT</li>
+                                    <li>DEVOPS_DEPLOY_ENVIRONMENT</li>
+                                    <li>DEVOPS_DEPLOY_PIPELINE</li>
+                                    <li>DEVOPS_DEPLOY_STAGE</li>
+                                    <li>DEVOPS_DEPLOY_DEPLOYMENT</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>devops-deploy-artifact</td>
+                            <td>
+                                <ul>
+                                    <li>DEVOPS_DEPLOY_ARTIFACT_INSPECT</li>
+                                    <li>DEVOPS_DEPLOY_ARTIFACT_READ</li>
+                                    <li>DEVOPS_DEPLOY_ARTIFACT_UPDATE</li>
+                                    <li>DEVOPS_DEPLOY_ARTIFACT_CREATE</li>
+                                    <li>DEVOPS_DEPLOY_ARTIFACT_DELETE</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>devops-deploy-environment</td>
+                            <td>
+                                <ul>
+                                    <li>DEVOPS_DEPLOY_ENVIRONMENT_INSPECT</li>
+                                    <li>DEVOPS_DEPLOY_ENVIRONMENT_READ</li>
+                                    <li>DEVOPS_DEPLOY_ENVIRONMENT_UPDATE</li>
+                                    <li>DEVOPS_DEPLOY_ENVIRONMENT_CREATE</li>
+                                    <li>DEVOPS_DEPLOY_ENVIRONMENT_DELETE</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>devops-deploy-pipeline</td>
+                            <td>
+                                <ul>
+                                    <li>DEVOPS_DEPLOY_PIPELINE_INSPECT</li>
+                                    <li>DEVOPS_DEPLOY_PIPELINE_READ</li>
+                                    <li>DEVOPS_DEPLOY_PIPELINE_UPDATE</li>
+                                    <li>DEVOPS_DEPLOY_PIPELINE_CREATE</li>
+                                    <li>DEVOPS_DEPLOY_PIPELINE_DELETE</li>
+                                    <li>DEVOPS_DEPLOY_PIPELINE_TRIGGER</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>devops-deploy-stage</td>
+                            <td>
+                                <ul>
+                                    <li>DEVOPS_DEPLOY_STAGE_INSPECT</li>
+                                    <li>DEVOPS_DEPLOY_STAGE_READ</li>
+                                    <li>DEVOPS_DEPLOY_STAGE_UPDATE</li>
+                                    <li>DEVOPS_DEPLOY_STAGE_CREATE</li>
+                                    <li>DEVOPS_DEPLOY_STAGE_DELETE</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>devops-deployment</td>
+                            <td>
+                                <ul>
+                                    <li>DEVOPS_DEPLOYMENT_INSPECT</li>
+                                    <li>DEVOPS_DEPLOYMENT_READ</li>
+                                    <li>DEVOPS_DEPLOYMENT_UPDATE</li>
+                                    <li>DEVOPS_DEPLOYMENT_CANCEL</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verb + Resource Type Combinations -->
+    <div class="card mt-4 border-primary">
+        <div class="card-header">
+            <h5>Details for Verb + Resource Type Combinations</h5>
+        </div>
+        <div class="card-body">
+            <p>The following tables provide details about the permissions covered by each verb for DevOps resources.</p>
+
+            <h6 class="mt-4">Permissions for devops-family</h6>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Verb</th>
+                            <th>API Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>inspect</td>
+                            <td>
+                                <ul>
+                                    <li>ListProjects</li>
+                                    <li>ListRepositories</li>
+                                    <li>ListBuildPipelines</li>
+                                    <li>ListDeployPipelines</li>
+                                    <li>ListDeployEnvironments</li>
+                                    <li>ListDeployArtifacts</li>
+                                    <li>ListBuildRuns</li>
+                                    <li>ListDeployments</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>read</td>
+                            <td>
+                                <ul>
+                                    <li>GetProject</li>
+                                    <li>GetRepository</li>
+                                    <li>GetBuildPipeline</li>
+                                    <li>GetDeployPipeline</li>
+                                    <li>GetDeployEnvironment</li>
+                                    <li>GetDeployArtifact</li>
+                                    <li>GetBuildRun</li>
+                                    <li>GetDeployment</li>
+                                    <li>GetDeployStage</li>
+                                    <li>ListDeployStages</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>use</td>
+                            <td>
+                                <ul>
+                                    <li>TriggerBuildPipeline</li>
+                                    <li>TriggerDeployPipeline</li>
+                                    <li>CancelBuildRun</li>
+                                    <li>CancelDeployment</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>manage</td>
+                            <td>
+                                <ul>
+                                    <li>CreateProject</li>
+                                    <li>UpdateProject</li>
+                                    <li>DeleteProject</li>
+                                    <li>CreateRepository</li>
+                                    <li>UpdateRepository</li>
+                                    <li>DeleteRepository</li>
+                                    <li>CreateBuildPipeline</li>
+                                    <li>UpdateBuildPipeline</li>
+                                    <li>DeleteBuildPipeline</li>
+                                    <li>CreateDeployPipeline</li>
+                                    <li>UpdateDeployPipeline</li>
+                                    <li>DeleteDeployPipeline</li>
+                                    <li>CreateDeployEnvironment</li>
+                                    <li>UpdateDeployEnvironment</li>
+                                    <li>DeleteDeployEnvironment</li>
+                                    <li>CreateDeployArtifact</li>
+                                    <li>UpdateDeployArtifact</li>
+                                    <li>DeleteDeployArtifact</li>
+                                    <li>CreateDeployStage</li>
+                                    <li>UpdateDeployStage</li>
+                                    <li>DeleteDeployStage</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Services (New Section) -->
+    <div class="card mt-4 border-primary">
+        <div class="card-header">
+            <h5>Related Services for CI/CD Pipelines</h5>
+        </div>
+        <div class="card-body">
+            <p>DevOps processes often require integration with other OCI services. Here are the policy references for key integration services:</p>
+
+            <!-- Functions -->
+            <div class="card mt-3">
+                <div class="card-header bg-light text-primary">
+                    <h6 class="mb-0">Functions Service Policies</h6>
+                </div>
+                <div class="card-body">
+                    <p>Oracle Functions is a serverless platform that lets you create, run, and scale applications without managing infrastructure. Functions are often used in DevOps pipelines for tasks like build automation, testing, and deployment.</p>
+                    <p><strong>Functions Resource Types:</strong></p>
+                    <ul>
+                        <li><code>functions-family</code>: All Functions resources</li>
+                        <li><code>fn-function</code>: Individual functions</li>
+                        <li><code>fn-app</code>: Function applications</li>
+                        <li><code>fn-invoke</code>: Used for invoking functions</li>
+                    </ul>
+                    
+                    <h6 class="mt-3">Common Functions Policy Examples:</h6>
+                    <pre><code># Allow developers to manage functions applications
+Allow group FunctionDevelopers to manage fn-app in compartment ProjectA
+
+# Allow DevOps service to invoke functions
+Allow service devops to use fn-invoke in compartment ProjectA
+
+# Allow a specific group to invoke functions
+Allow group FunctionUsers to use fn-invoke in compartment ProjectA
+
+# Allow a specific user to manage all Functions resources
+Allow user user@example.com to manage functions-family in compartment ProjectA</code></pre>
+                    
+                    <p class="mt-3">For more information, see the <a href="https://docs.oracle.com/en-us/iaas/Content/Identity/policyreference/functionspolicyreference.htm" target="_blank">OCI Functions Policy Reference</a>.</p>
+                </div>
+            </div>
+
+            <!-- API Gateway -->
+            <div class="card mt-3">
+                <div class="card-header bg-light text-primary">
+                    <h6 class="mb-0">API Gateway Service Policies</h6>
+                </div>
+                <div class="card-body">
+                    <p>API Gateway secures and manages API access to backend services, including Functions and containerized applications created through DevOps pipelines.</p>
+                    <p><strong>API Gateway Resource Types:</strong></p>
+                    <ul>
+                        <li><code>api-gateway-family</code>: All API Gateway resources</li>
+                        <li><code>gateway</code>: Gateway instances</li>
+                        <li><code>api</code>: API deployments</li>
+                        <li><code>certificate</code>: SSL certificates</li>
+                    </ul>
+                    
+                    <h6 class="mt-3">Common API Gateway Policy Examples:</h6>
+                    <pre><code># Allow API Gateway administrators to manage all gateway resources
+Allow group APIGatewayAdmins to manage api-gateway-family in compartment ProjectA
+
+# Allow developers to deploy APIs but not create gateways
+Allow group Developers to manage api in compartment ProjectA
+Allow group Developers to read gateway in compartment ProjectA
+
+# Allow DevOps service to use API Gateway
+Allow service devops to use api-gateway-family in compartment ProjectA 
+
+# Allow creating APIs that integrate with Functions
+Allow group APIGatewayAdmins to use fn-function in compartment ProjectA</code></pre>
+                    
+                    <p class="mt-3">For more information, see the <a href="https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/apigatewaypolicyreference.htm" target="_blank">OCI API Gateway Policy Reference</a>.</p>
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="card mt-3">
+                <div class="card-header bg-light text-primary">
+                    <h6 class="mb-0">Notifications Service Policies</h6>
+                </div>
+                <div class="card-body">
+                    <p>The Notifications service helps deliver messages to subscribers through various delivery options like email, Function, and HTTP webhooks. It's commonly used in DevOps pipelines to notify teams about build and deployment events.</p>
+                    <p><strong>Notifications Resource Types:</strong></p>
+                    <ul>
+                        <li><code>ons-family</code>: All Notifications resources</li>
+                        <li><code>ons-topic</code>: Topics for publishing messages</li>
+                        <li><code>ons-subscription</code>: Subscription to a topic</li>
+                    </ul>
+                    
+                    <h6 class="mt-3">Common Notifications Policy Examples:</h6>
+                    <pre><code># Allow notifications administrators to manage all notification resources
+Allow group NotificationAdmins to manage ons-family in compartment ProjectA
+
+# Allow DevOps service to publish to notification topics
+Allow service devops to use ons-topic in compartment ProjectA
+
+# Allow specific users to manage notification topics
+Allow group NotificationUsers to manage ons-topic in compartment ProjectA
+Allow group NotificationUsers to use ons-subscription in compartment ProjectA
+
+# Allow users to create subscriptions only
+Allow group Developers to use ons-subscription in compartment ProjectA</code></pre>
+                    
+                    <p class="mt-3">For more information, see the <a href="https://docs.oracle.com/en-us/iaas/Content/Security/Reference/notifications_security.htm#iam-policies" target="_blank">OCI Notifications Policy Reference</a>.</p>
+                </div>
+            </div>
+
+            <!-- Events -->
+            <div class="card mt-3">
+                <div class="card-header bg-light text-primary">
+                    <h6 class="mb-0">Events Service Policies</h6>
+                </div>
+                <div class="card-body">
+                    <p>The Events service enables you to create automation based on state changes in Oracle Cloud Infrastructure resources. You can use Events to trigger DevOps build pipelines and other automated processes.</p>
+                    <p><strong>Events Resource Types:</strong></p>
+                    <ul>
+                        <li><code>cloudevents-rules</code>: Event rules</li>
+                    </ul>
+                    
+                    <h6 class="mt-3">Common Events Policy Examples:</h6>
+                    <pre><code># Allow administrators to manage event rules
+Allow group EventAdmins to manage cloudevents-rules in compartment ProjectA
+
+# Allow DevOps team to create event rules that trigger build pipelines
+Allow group DevOpsTeam to manage cloudevents-rules in compartment ProjectA
+Allow group DevOpsTeam to use devops-build-pipeline in compartment ProjectA
+
+# Allow events service to use DevOps resources
+Allow service cloudevents to use devops-family in compartment ProjectA
+
+# Allow events service to publish to notification topics
+Allow service cloudevents to use ons-topic in compartment ProjectA</code></pre>
+                    
+                    <p class="mt-3">For more information, see the <a href="https://docs.oracle.com/en-us/iaas/Content/Events/Concepts/eventspolicy.htm" target="_blank">OCI Events Policy Reference</a>.</p>
+                </div>
+            </div>
+
+            <!-- Queue -->
+            <div class="card mt-3">
+                <div class="card-header bg-light text-primary">
+                    <h6 class="mb-0">Queue Service Policies</h6>
+                </div>
+                <div class="card-body">
+                    <p>The Queue service provides reliable, high-performance messaging for asynchronous communication between services. Queue can be used in DevOps pipelines for task coordination, workload distribution, and managing build/deploy processes.</p>
+                    <p><strong>Queue Resource Types:</strong></p>
+                    <ul>
+                        <li><code>queue-family</code>: All Queue resources</li>
+                        <li><code>queue</code>: Individual queues</li>
+                        <li><code>put-messages</code>: Publish messages to queue</li>
+                        <li><code>get-messages</code>: Consume messages from queue</li>
+                    </ul>
+                    
+                    <h6 class="mt-3">Common Queue Policy Examples:</h6>
+                    <pre><code># Allow Queue administrators to manage all queue resources
+Allow group QueueAdmins to manage queue-family in compartment ProjectA
+
+# Allow DevOps service to put messages in queues
+Allow service devops to use put-messages in compartment ProjectA
+
+# Allow systems to consume messages from queues
+Allow group MessageConsumers to use get-messages in compartment ProjectA
+
+# Allow separate producer and consumer permissions
+Allow group MessageProducers to use put-messages in compartment ProjectA where target.queue.name = 'build-queue'
+Allow group MessageConsumers to use get-messages in compartment ProjectA where target.queue.name = 'build-queue'</code></pre>
+                    
+                    <p class="mt-3">For more information, see the <a href="https://docs.oracle.com/en-us/iaas/Content/queue/policy-reference.htm" target="_blank">OCI Queue Policy Reference</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Common Policy Examples -->
+    <div class="card mt-4 border-primary">
+        <div class="card-header">
+            <h5>Common DevOps Policy Examples</h5>
+        </div>
+        <div class="card-body">
+            <h6>Allow a group to access all DevOps resources in a compartment</h6>
+            <pre><code>Allow group DevOpsAdmins to manage devops-family in compartment ProjectA</code></pre>
+            
+            <h6>Allow a group to view DevOps resources but not modify them</h6>
+            <pre><code>Allow group DevOpsViewers to read devops-family in compartment ProjectA</code></pre>
+            
+            <h6>Allow a group to manage code repositories but only view deployment pipelines</h6>
+            <pre><code>Allow group Developers to manage devops-repository in compartment ProjectA
+Allow group Developers to read devops-deploy-pipeline in compartment ProjectA</code></pre>
+            
+            <h6>Allow a group to trigger build pipelines but not modify them</h6>
+            <pre><code>Allow group CITeam to read devops-build-pipeline in compartment ProjectA
+Allow group CITeam to use devops-build-pipeline in compartment ProjectA</code></pre>
+            
+            <h6>Allow a group to manage deployment artifacts and environments</h6>
+            <pre><code>Allow group ReleaseTeam to manage devops-deploy-artifact in compartment ProjectA
+Allow group ReleaseTeam to manage devops-deploy-environment in compartment ProjectA</code></pre>
+            
+            <h6>Allow a dynamic group of compute instances to use deployment pipelines</h6>
+            <pre><code>Allow dynamic-group BuildServers to use devops-deploy-pipeline in compartment ProjectA</code></pre>
+        </div>
+    </div>
+    
+    <!-- Policy Requirements for Dynamic Groups -->
+    <div class="card mt-4 border-primary">
+        <div class="card-header">
+            <h5>Policy Requirements for Dynamic Groups</h5>
+        </div>
+        <div class="card-body">
+            <p>When using OCI DevOps with services like OKE (Oracle Kubernetes Engine) or Functions, you'll need to set up dynamic groups and policies to allow these services to interact with DevOps resources.</p>
+            
+            <h6>Dynamic Group for OKE Deployment</h6>
+            <pre><code># Dynamic group definition
+ALL {resource.type = 'cluster', resource.compartment.id = 'ocid1.compartment.oc1..example'}</code></pre>
+            
+            <h6>Policies for OKE Dynamic Group</h6>
+            <pre><code># Allow OKE to pull images from OCIR
+Allow dynamic-group OKEClusters to manage repos in tenancy where target.repo.name = 'oci-repository-name'
+
+# Allow OKE to read DevOps artifacts
+Allow dynamic-group OKEClusters to read devops-deploy-artifact in compartment ProjectA</code></pre>
+            
+            <h6>Dynamic Group for Functions Deployment</h6>
+            <pre><code># Dynamic group definition
+ALL {resource.type = 'fnfunc', resource.compartment.id = 'ocid1.compartment.oc1..example'}</code></pre>
+            
+            <h6>Policies for Functions Dynamic Group</h6>
+            <pre><code># Allow Functions to access resources they need
+Allow dynamic-group FunctionsGroup to use devops-deploy-artifact in compartment ProjectA</code></pre>
+        </div>
+    </div>
+
+    <!-- Complete DevOps Architecture Policy Example -->
+    <div class="card mt-4 border-primary">
+        <div class="card-header">
+            <h5>Complete DevOps Architecture Policy Example</h5>
+        </div>
+        <div class="card-body">
+            <p>Below is an example of a comprehensive policy setup for a complete DevOps architecture using multiple OCI services:</p>
+            
+            <pre><code># DevOps Administrator group can manage all DevOps resources
+Allow group DevOpsAdmins to manage devops-family in compartment ProjectA
+
+# DevOps service needs to work with Functions for deployments
+Allow service devops to use fn-invoke in compartment ProjectA
+Allow service devops to read fn-app in compartment ProjectA
+
+# DevOps service needs to send notifications
+Allow service devops to use ons-topic in compartment ProjectA
+
+# DevOps service needs to interact with API Gateway (for API deployments)
+Allow service devops to use api-gateway-family in compartment ProjectA
+
+# Event rules can trigger DevOps pipelines
+Allow service cloudevents to use devops-build-pipeline in compartment ProjectA
+
+# DevOps service needs to publish to queues for job processing
+Allow service devops to use put-messages in compartment ProjectA
+
+# OKE dynamic group for container deployments
+# Dynamic group definition: ALL {resource.type = 'cluster', resource.compartment.id = 'ocid1.compartment.oc1..example'}
+Allow dynamic-group OKEClusters to manage repos in tenancy
+Allow dynamic-group OKEClusters to read devops-deploy-artifact in compartment ProjectA
+
+# Functions dynamic group for serverless deployments
+# Dynamic group definition: ALL {resource.type = 'fnfunc', resource.compartment.id = 'ocid1.compartment.oc1..example'}
+Allow dynamic-group FunctionsGroup to use devops-deploy-artifact in compartment ProjectA
+Allow dynamic-group FunctionsGroup to use ons-topic in compartment ProjectA</code></pre>
+        </div>
+    </div>
+</div>
+{% endblock %}
